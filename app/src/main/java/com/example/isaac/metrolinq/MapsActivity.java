@@ -92,7 +92,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
-
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -181,11 +181,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
             originMarkers.add(mMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET))
                     .title(route.startAddress)
                     .position(route.startLocation)));
             destinationMarkers.add(mMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                     .title(route.endAddress)
                     .position(route.endLocation)));
 
