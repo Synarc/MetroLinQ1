@@ -177,7 +177,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
 
-            ((TextView) findViewById(R.id.price)).setText(Double.toString(priceRide));
+            ((TextView) findViewById(R.id.price)).setText(Double.toString(priceRide)+ " Kina");
 
 
             originMarkers.add(mMap.addMarker(new MarkerOptions()
