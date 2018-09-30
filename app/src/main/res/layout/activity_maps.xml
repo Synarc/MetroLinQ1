@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.isaac.metrolinq2.MapsActivity"
+    tools:context="com.example.isaac.metrolinq.MapsActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"  >
@@ -12,50 +12,47 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
+       android:gravity="center"
+        android:background="@color/colorMoney"
         android:orientation="horizontal">
-        <ImageView
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="5dp"
-            android:layout_width="20dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_launcher_background"/>
-        <TextView
-            android:layout_marginLeft="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0 km"
-            android:id="@+id/tvDistance" />
 
         <ImageView
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
-            android:layout_width="20dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:padding="5dp"
-            android:src="@drawable/ic_launcher_background"/>
+            android:src="@drawable/money"/>
+
         <TextView
-            android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0 min"
-            android:id="@+id/tvDuration" />
-
-        <ImageView
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
-            android:layout_width="20dp"
-            android:layout_height="40dp"
-            android:padding="5dp"
-            android:src="@drawable/ic_launcher_background"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:text="0 Kina"
+            android:fontFamily="cursive"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="K 0.0"
+            android:textSize="30dp"
             android:id="@+id/price"/>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/selectTimeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:fontFamily="cursive"
+        android:text="Confirm Journey"/>
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+    </TimePicker>
 
 
     <fragment
@@ -63,5 +60,8 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+
+
 
 </LinearLayout>
