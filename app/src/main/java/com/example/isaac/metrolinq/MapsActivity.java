@@ -52,7 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private Double m;
     private  Double y;
-    private static String TIMECONFIRM = "Confirm Pick Up Time";
+    private static String TIMECONFIRM = "Confirm PickUp Time";
     private static String JOURNEYCONFIRM = "Confirm Journey";
 
     @Override
