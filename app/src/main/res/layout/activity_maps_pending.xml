@@ -1,0 +1,98 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.isaac.metrolinq.MapsPendingActivity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"  >
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@color/colorMoney"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="5dp"
+            android:src="@drawable/money"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:fontFamily="cursive"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:text="K 0.0"
+            android:textSize="30dp"
+            android:id="@+id/farePending"/>
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/timeMap3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/backtimedate"
+            android:text="Time"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/dateMap3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="41dp"
+            android:background="@drawable/backtimedate"
+            android:text="Date"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20dp" />
+
+
+        <TextView
+            android:id="@+id/driverMap3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="150dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/backtimedate"
+            android:text="Driver"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="30dp" />
+
+    </RelativeLayout>
+
+
+
+</LinearLayout>
