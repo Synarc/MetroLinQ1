@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-       android:gravity="center"
+        android:gravity="center"
         android:background="@color/colorMoney"
         android:orientation="horizontal">
 
@@ -53,6 +53,123 @@
         android:visibility="gone">
 
     </TimePicker>
+
+    <LinearLayout
+        android:id="@+id/LLDatePicker"
+        android:layout_width="match_parent"
+        android:weightSum="100"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <DatePicker
+            android:id="@+id/datePicker"
+            android:layout_width="match_parent"
+            android:layout_weight="80"
+            android:calendarTextColor="@color/colorPrimaryDark"
+            android:headerDayOfMonthTextAppearance="@color/colorPrimaryDark"
+            android:layout_height="match_parent">
+
+        </DatePicker>
+
+        <Button
+            android:id="@+id/datePickerButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="confrim Date"
+            android:layout_weight="20"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LLclientName"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/editTextClientname"
+            android:layout_width="wrap_content"
+            android:layout_weight="90"
+            android:layout_height="wrap_content"
+            android:hint="Enter Client Name"/>
+
+        <Button
+            android:id="@+id/buttonClientName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:text="Confirm name"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/LLprepaid"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:weightSum="50"
+        android:visibility="gone"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/edittextPrepaid"
+            android:layout_weight="20"
+            android:hint="Amount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/confrimPrepaid"
+            android:layout_weight="20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="confrim amount"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/LLChoosePay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="90"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/cash"
+            android:layout_margin="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:background="@color/colorAccent"
+            android:text="Cash"
+
+            />
+        <Button
+            android:id="@+id/prepaid"
+            android:layout_margin="5dp"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:background="@color/colorAccent"
+            android:text="prepaid"
+
+            />
+        <Button
+            android:id="@+id/postPaid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:layout_weight="30"
+            android:text="postpaid"
+            android:layout_margin="5dp"
+            />
+
+
+    </LinearLayout>
+
 
 
     <fragment
