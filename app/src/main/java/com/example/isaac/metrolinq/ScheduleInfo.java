@@ -1,78 +1,151 @@
 package com.example.isaac.metrolinq;
 
+import java.util.Date;
+
 public class ScheduleInfo {
 
-    private int hour;
-    private int min;
-    private double oriLat;
-    private double oriLon;
-    private double desLat;
-    private double desLon;
-    private int fare;
+    private int Hour;
+    private int Min;
+    private double OriLat;
+    private double OriLon;
+    private double DesLat;
+    private double DesLon;
+    private int Fare;
+    private String ClientName;
+    private Date CurrentDate;
+    private int Year, Month, Day;
+    private String PayType, AssignDriver;
+
+    public String getAssignDriver() {
+        return AssignDriver;
+    }
+
+    public void setAssignDriver(String assignDriver) {
+        AssignDriver = assignDriver;
+    }
+
+    public Date getCurrentDate() {
+        return CurrentDate;
+    }
+
+    public void setCurrentDate(Date currentDate) {
+        this.CurrentDate = currentDate;
+    }
+
+    public int getYear() {
+        return Year;
+    }
+
+    public void setYear(int year) {
+        Year = year;
+    }
+
+    public int getMonth() {
+        return Month;
+    }
+
+    public void setMonth(int month) {
+        Month = month;
+    }
+
+    public int getDay() {
+        return Day;
+    }
+
+    public void setDay(int day) {
+        Day = day;
+    }
+
+    public String getPayType() {
+        return PayType;
+    }
+
+    public void setPayType(String payType) {
+        PayType = payType;
+    }
+
+    public String getClientName() {
+        return ClientName;
+    }
+
+    public void setClientName(String clientName) {
+        ClientName = clientName;
+    }
 
     public int getFare() {
-        return fare;
+        return Fare;
     }
 
     public void setFare(int fare) {
-        this.fare = fare;
+        this.Fare = fare;
     }
 
     public int getHour() {
-        return hour;
+        return Hour;
     }
 
     public void setHour(int hour) {
-        this.hour = hour;
+        this.Hour = hour;
     }
 
     public int getMin() {
-        return min;
+        return Min;
     }
 
     public void setMin(int min) {
-        this.min = min;
+        this.Min = min;
     }
 
     public double getOriLat() {
-        return oriLat;
+        return OriLat;
     }
 
     public void setOriLat(double oriLat) {
-        this.oriLat = oriLat;
+        this.OriLat = oriLat;
     }
 
     public double getOriLon() {
-        return oriLon;
+        return OriLon;
     }
 
     public void setOriLon(double oriLon) {
-        this.oriLon = oriLon;
+        this.OriLon = oriLon;
     }
 
     public double getDesLat() {
-        return desLat;
+        return DesLat;
     }
 
     public void setDesLat(double desLat) {
-        this.desLat = desLat;
+        this.DesLat = desLat;
     }
 
     public double getDesLon() {
-        return desLon;
+        return DesLon;
     }
 
     public void setDesLon(double desLon) {
-        this.desLon = desLon;
+        this.DesLon = desLon;
     }
 
-    public ScheduleInfo(Integer hour, Integer min, double oriLat, double oriLon, double desLat, double desLon, int fare) {
-        this.hour = hour;
-        this.min = min;
-        this.oriLat = oriLat;
-        this.oriLon = oriLon;
-        this.desLat = desLat;
-        this.desLon = desLon;
-        this.fare = fare;
+    public ScheduleInfo(Integer hour, Integer min, double oriLat, double oriLon, double desLat,
+                        double desLon, int fare, String clientName, int year, int month, int day,
+                        Date currentDate, String payType,String assignDriver) {
+        Hour = hour;
+        Min = min;
+        OriLat = oriLat;
+        OriLon = oriLon;
+        DesLat = desLat;
+        DesLon = desLon;
+        Fare = fare;
+        ClientName = clientName;
+        Year = year;
+        Month = month;
+        Day = day;
+        CurrentDate = currentDate;
+        PayType = payType;
+        AssignDriver = assignDriver;
+
+
     }
 }
