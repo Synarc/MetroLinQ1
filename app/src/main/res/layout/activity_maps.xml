@@ -164,9 +164,7 @@
             android:background="@color/colorAccent"
             android:layout_weight="30"
             android:text="postpaid"
-            android:layout_margin="4dp"
-
-
+            android:layout_margin="5dp"
             />
 
 
