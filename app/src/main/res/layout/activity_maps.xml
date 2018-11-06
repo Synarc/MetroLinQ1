@@ -165,8 +165,6 @@
             android:layout_weight="30"
             android:text="postpaid"
             android:layout_margin="4dp"
-
-
             />
 
 
