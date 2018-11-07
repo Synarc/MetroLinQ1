@@ -1,15 +1,16 @@
 package com.example.isaac.metrolinq;
 
-import android.Manifest;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.ScheduleInfo;
+import com.example.isaac.metrolinq.MapsClasses.DirectionFinder;
+import com.example.isaac.metrolinq.MapsClasses.DirectionFinderListener;
+import com.example.isaac.metrolinq.MapsClasses.Route;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -44,9 +49,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static android.os.SystemClock.sleep;
-
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, DirectionFinderListener  {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, DirectionFinderListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private static final int LOCATION_REQUEST = 500 ;
     private GoogleMap mMap;
@@ -55,6 +58,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Polyline> polylinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
     ArrayList<LatLng> listpoints;
+
+
+    int scase = 0;
 
     private Date currentDate;
 
@@ -71,7 +77,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Button selectTimeButton;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabaseFare;
-    private  ScheduleInfo scheduleInfo;
+    private ScheduleInfo scheduleInfo;
     private LatLng Base;
     double latOrigin;
     double lonOrigin;
@@ -84,12 +90,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LinearLayout dateLL, choosePayLL;
     private Button cash, prepaid, postpaid;
 
+    private String m_Text;
+
+    int day, month, year, hour, min;
+    int finalday, finalmonth, finalyear, finalHour, finalMin;
+
 
     private Double m;
     private  Double y;
     int roundedfare = 0;
     private static String TIMECONFIRM = "Confirm PickUp Time";
     private static String JOURNEYCONFIRM = "Confirm Journey";
+    private static String DATECONFIRM = "Confirm Date";
+    private static String PAYMENT_TYPE = "Choose Payment";
+    private static String CLIENT_NAME = "Confirm Name";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +115,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
         listpoints = new ArrayList<>();
         distancesToTotal = new ArrayList<>();
+
+        final String [] payType = {"Cash", "Pre Paid", "Post Paid"};
 
         Base = new LatLng(-9.447991923108408,147.1935924142599);
         timePicker = findViewById(R.id.timePicker);
@@ -150,46 +166,168 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
 
-                if (selectTimeButton.getText().equals(JOURNEYCONFIRM)){
-                    timePicker.setVisibility(View.VISIBLE);
-                    selectTimeButton.setText(TIMECONFIRM);
-                    selectTimeButton.setVisibility(View.VISIBLE);
-
-                    LatLng sydney = new LatLng(-9.4438, 147.1803);
-
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
 
 
+                switch (scase){
+
+                    case 0:
+                        findViewById(R.id.map).setVisibility(View.INVISIBLE);
+                        Calendar c = Calendar.getInstance();
+
+                        hour = c.get(Calendar.HOUR);
+                        min = c.get(Calendar.MINUTE);
+
+
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(MapsActivity.this, MapsActivity.this,hour, min, true);
+
+                        timePickerDialog.show();
+
+                        selectTimeButton.setText(DATECONFIRM);
+
+
+                        LatLng sydney = new LatLng(-9.4438, 147.1803);
+
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
+
+                        scase =1;
+                        break;
+
+                    case 1:
+                        Calendar calendar = Calendar.getInstance();
+
+                        year =calendar.get(Calendar.YEAR);
+                        month = calendar.get(Calendar.MONTH);
+                        day = calendar.get(Calendar.DAY_OF_MONTH);
+
+
+                        DatePickerDialog datePickerDialog = new DatePickerDialog(MapsActivity.this, MapsActivity.this,year,month, day);
+
+                        datePickerDialog.show();
+                        Toast.makeText(getApplicationContext(),timePicker.getCurrentHour()+" : "+timePicker.getCurrentMinute(),Toast.LENGTH_SHORT).show();
+
+
+
+                        selectTimeButton.setText(PAYMENT_TYPE);
+
+
+                        listpoints.clear();
+                        mMap.clear();
+
+                        scase = 2;
+                        break;
+
+                    case 2:
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this)  ;
+                        builder.setCancelable(true);
+                        builder.setSingleChoiceItems(payType, -1, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                Toast.makeText(MapsActivity.this, payType[which], Toast.LENGTH_SHORT).show();
+                                payment = payType[which];
+
+                                if (payment.equals("Pre Paid")){
+                                    AlertDialog.Builder builder1 = new AlertDialog.Builder(MapsActivity.this);
+                                    builder1.setTitle("Enter Amount");
+
+// Set up the input
+                                    final EditText input = new EditText(MapsActivity.this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                                    input.setInputType(InputType.TYPE_CLASS_NUMBER );
+                                    builder1.setView(input);
+
+// Set up the buttons
+                                    builder1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                           roundedfare = Integer.parseInt(input.getText().toString()) ;
+                                        }
+                                    });
+
+
+                                    builder1.show();
+                                }
+
+                                dialog.dismiss();
+                            }
+                        });
+
+                        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(MapsActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+
+                        selectTimeButton.setText(CLIENT_NAME);
+
+                        scase = 3;
+
+                        break;
+
+                    case 3:
+
+                        AlertDialog.Builder builders = new AlertDialog.Builder(MapsActivity.this);
+                        builders.setTitle("Client Name");
+
+// Set up the input
+                        final EditText input = new EditText(MapsActivity.this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                        input.setInputType(InputType.TYPE_CLASS_TEXT );
+                        builders.setView(input);
+
+// Set up the buttons
+                        builders.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                m_Text = input.getText().toString();
+
+                                selectTimeButton.setText(TIMECONFIRM);
+
+                                scase = 0;
+
+
+                                scheduleInfo = new ScheduleInfo(finalHour,finalMin
+                                        , latOrigin,lonOrigin,
+                                        latDesti,lonDesti, roundedfare, m_Text,
+                                        finalyear,
+                                        finalmonth ,
+                                        finalday, currentDate, payment, ASSIGN_DRIVER );
+
+                                String uploadId = mDatabase.push().getKey();
+                                mDatabase.child(uploadId).setValue(scheduleInfo);
+                            }
+                        });
+
+
+                        builders.show();
+
+
+                        findViewById(R.id.map).setVisibility(View.VISIBLE);
+                        break;
 
 
                 }
-                else {
-                    Toast.makeText(getApplicationContext(),timePicker.getCurrentHour()+" : "+timePicker.getCurrentMinute(),Toast.LENGTH_SHORT).show();
 
-                    selectTimeButton.setVisibility(View.GONE);
-                    timePicker.setVisibility(View.GONE);
-                    selectTimeButton.setText(JOURNEYCONFIRM);
-                    dateLL.setVisibility(View.VISIBLE);
-                    findViewById(R.id.map).setVisibility(View.GONE);
-                    listpoints.clear();
-                    mMap.clear();
-
-
-                }
             }
         });
 
         confirmName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                                    scheduleInfo = new ScheduleInfo(timePicker.getCurrentHour(),timePicker.getCurrentMinute()
+                                    scheduleInfo = new ScheduleInfo(finalHour,finalMin
                             , latOrigin,lonOrigin,
                             latDesti,lonDesti, roundedfare, enterName.getText().toString(),
-                                            datePicker.getYear(),
-                                            datePicker.getMonth() + 1,
-                                            datePicker.getDayOfMonth(), currentDate, payment, ASSIGN_DRIVER );
+                                            finalyear,
+                                            finalmonth ,
+                                            finalday, currentDate, payment, ASSIGN_DRIVER );
 
                 String uploadId = mDatabase.push().getKey();
                 mDatabase.child(uploadId).setValue(scheduleInfo);
@@ -487,6 +625,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 startActivity(intent);
                 break;
 
+            case R.id.complete:
+                Intent intent1= new Intent(this, AllCompletedActivity.class);
+                startActivity(intent1);
+                break;
+
             case R.id.currentRun:
                 Intent intent2 = new Intent(this, CompletedActivity.class);
                 startActivity(intent2);
@@ -495,5 +638,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        finalyear = year;
+        finalmonth = month +1;
+        finalday = dayOfMonth;
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        finalHour = hourOfDay;
+        finalMin = minute;
     }
 }
