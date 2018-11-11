@@ -1,4 +1,4 @@
-package com.example.isaac.metrolinq;
+package com.example.isaac.metrolinq.MapsClasses;
 
 import java.util.List;
 

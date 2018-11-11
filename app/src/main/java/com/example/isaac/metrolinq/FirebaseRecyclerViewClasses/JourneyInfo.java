@@ -1,4 +1,4 @@
-package com.example.isaac.metrolinq;
+package com.example.isaac.metrolinq.FirebaseRecyclerViewClasses;
 
 import java.io.Serializable;
 

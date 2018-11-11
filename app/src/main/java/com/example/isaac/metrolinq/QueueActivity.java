@@ -1,16 +1,26 @@
 package com.example.isaac.metrolinq;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.isaac.metrolinq.Adapters.AdapterQueue;
+import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.JourneyInfo;
+import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.QueueTimeName;
+import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.ScheduleInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,10 +37,11 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
     private DatabaseReference clientNameDB, mDB;
     private AdapterQueue mAdapter;
     private RecyclerView mRecyclerView;
+    private DatabaseReference mDatabase;
 
      int  iterate = 0;
-    int  k =0;
-
+     int iterateNumber =0;
+     String driver,car;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +61,8 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
 
         clientNameDB = FirebaseDatabase.getInstance().getReference("Scheduled Info");
         mDB = FirebaseDatabase.getInstance().getReference("Scheduled Info");
+        mDatabase = FirebaseDatabase.getInstance().getReference("Journey Info");
+
 
 
         clientNameDB.addValueEventListener(new ValueEventListener() {
@@ -100,6 +113,11 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
                 startActivity(intent2);
                 break;
 
+            case R.id.complete1:
+                Intent intent3 = new Intent(this, AllCompletedActivity.class);
+                startActivity(intent3);
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -112,9 +130,85 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
 
 
 
-        Intent intent = new Intent(QueueActivity.this, SelectDriverCarActivity.class);
-        intent.putExtra("POSITION_NUMBER",position);
-        startActivity(intent);
+//        Intent intent = new Intent(QueueActivity.this, SelectDriverCarActivity.class);
+//        intent.putExtra("POSITION_NUMBER",position);
+//        startActivity(intent);
+
+        AlertDialog.Builder builders = new AlertDialog.Builder(QueueActivity.this);
+        builders.setTitle("Client Name");
+
+        Context context = QueueActivity.this;
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+
+        // Add a TextView here for the "Title" label, as noted in the comments
+        final EditText driver1 = new EditText(context);
+        driver1.setHint("Driver");
+        layout.addView(driver1); // Notice this is an add method
+
+        // Add another TextView here for the "Description" label
+        final EditText Car = new EditText(context);
+        Car.setHint("Car");
+        layout.addView(Car); // Another add method
+
+        builders.setView(layout); // Again this is a set method, not add
+
+// Set up the buttons
+        builders.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                driver = driver1.getText().toString();
+                car = Car.getText().toString();
+
+
+                clientNameDB.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        for(DataSnapshot postSnapshot:dataSnapshot.getChildren() ){
+
+                            if (position == iterateNumber) {
+
+                                JourneyInfo journeyInfo = new JourneyInfo(
+                                        postSnapshot.child("oriLat").getValue(),
+                                        postSnapshot.child("oriLon").getValue(),
+                                        postSnapshot.child("desLat").getValue(),
+                                        postSnapshot.child("desLon").getValue(),
+                                        postSnapshot.child("fare").getValue(),
+                                        postSnapshot.child("min").getValue(),
+                                        postSnapshot.child("hour").getValue(),
+                                        postSnapshot.child("day").getValue(),
+                                        postSnapshot.child("month").getValue(),
+                                        postSnapshot.child("year").getValue(),
+                                        driver,
+                                        car,
+                                        postSnapshot.child("clientName").getValue(),
+                                        postSnapshot.child("payType").getValue(),
+                                        postSnapshot.child("currentDate").getValue()
+                                );
+
+
+                                String uploadId = mDatabase.push().getKey();
+                                mDatabase.child(uploadId).setValue(journeyInfo);
+
+                                clientNameDB.child(postSnapshot.getKey()).removeValue();
+
+                            }
+                            iterateNumber++;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+        });
+
+
+        builders.show();
 
 
     }

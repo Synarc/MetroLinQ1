@@ -2,16 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/currentRunQueue"
+
+    <item android:id="@+id/currentRunQueue3"
         android:title="Pending Trips "
         app:showAsAction="never"/>
 
-    <item android:id="@+id/mapQueue"
+    <item android:id="@+id/map3"
         android:title="Map"
         app:showAsAction="never"/>
 
-    <item android:id="@+id/complete1"
-        android:title="Completed Trips"
+    <item android:id="@+id/requested3"
+        android:title="Requested Trips"
         app:showAsAction="never"/>
-
 </menu>

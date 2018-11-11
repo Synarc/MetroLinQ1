@@ -1,5 +1,7 @@
-package com.example.isaac.metrolinq;
+package com.example.isaac.metrolinq.MapsClasses;
 
+import com.example.isaac.metrolinq.MapsClasses.Distance;
+import com.example.isaac.metrolinq.MapsClasses.Duration;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.List;
