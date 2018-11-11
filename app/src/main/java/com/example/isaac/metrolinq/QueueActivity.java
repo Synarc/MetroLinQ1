@@ -58,10 +58,14 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
 
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(QueueActivity.this);
+//
+//        clientNameDB = FirebaseDatabase.getInstance().getReference("Scheduled Info");
+//        mDB = FirebaseDatabase.getInstance().getReference("Scheduled Info");
+//        mDatabase = FirebaseDatabase.getInstance().getReference("Journey Info");
 
-        clientNameDB = FirebaseDatabase.getInstance().getReference("Scheduled Info");
-        mDB = FirebaseDatabase.getInstance().getReference("Scheduled Info");
-        mDatabase = FirebaseDatabase.getInstance().getReference("Journey Info");
+        clientNameDB = FirebaseDatabase.getInstance().getReference("TestRequest");
+        mDB = FirebaseDatabase.getInstance().getReference("TestRequest");
+        mDatabase = FirebaseDatabase.getInstance().getReference("TestJourney");
 
 
 
@@ -159,6 +163,7 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
             public void onClick(DialogInterface dialog, int which) {
                 driver = driver1.getText().toString();
                 car = Car.getText().toString();
+                iterateNumber = 0;
 
 
                 clientNameDB.addValueEventListener(new ValueEventListener() {
@@ -193,9 +198,12 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
 
                                 clientNameDB.child(postSnapshot.getKey()).removeValue();
 
+
                             }
                             iterateNumber++;
                         }
+
+
                     }
 
                     @Override

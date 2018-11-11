@@ -47,11 +47,13 @@ public class AllCompletedActivity extends AppCompatActivity {
 
         mRecyclerView.setAdapter(mAdapter);
 
+//
+//        clientNameDB = FirebaseDatabase.getInstance().getReference("Completed Journey");
+//        mDB = FirebaseDatabase.getInstance().getReference("Journey Info");
 
-        clientNameDB = FirebaseDatabase.getInstance().getReference("Completed Journey");
-        mDB = FirebaseDatabase.getInstance().getReference("Journey Info");
 
-
+        clientNameDB = FirebaseDatabase.getInstance().getReference("TestCompleteJourney");
+        mDB = FirebaseDatabase.getInstance().getReference("TestJourney");
 
         clientNameDB.addValueEventListener(new ValueEventListener() {
             @Override

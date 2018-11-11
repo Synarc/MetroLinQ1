@@ -38,7 +38,7 @@ public class CompletedActivity extends AppCompatActivity implements AdapeterComp
     DatabaseReference mDatabase, mDatabase2;
 
     private int iterate;
-    int i =0;
+    private int i = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,11 +57,17 @@ public class CompletedActivity extends AppCompatActivity implements AdapeterComp
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(CompletedActivity.this);
 
-        clientNameDB = FirebaseDatabase.getInstance().getReference("Journey Info");
-        mDB = FirebaseDatabase.getInstance().getReference("Journey Info");
+        clientNameDB = FirebaseDatabase.getInstance().getReference("TestJourney");
+        mDB = FirebaseDatabase.getInstance().getReference("TestJourney");
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("Journey Info");
-        mDatabase2 = FirebaseDatabase.getInstance().getReference("Completed Journey");
+        mDatabase = FirebaseDatabase.getInstance().getReference("TestJourney");
+        mDatabase2 = FirebaseDatabase.getInstance().getReference("TestCompleteJourney");
+//
+//        clientNameDB = FirebaseDatabase.getInstance().getReference("Journey Info");
+//        mDB = FirebaseDatabase.getInstance().getReference("Journey Info");
+//
+//        mDatabase = FirebaseDatabase.getInstance().getReference("Journey Info");
+//        mDatabase2 = FirebaseDatabase.getInstance().getReference("Completed Journey");
 
 
 
@@ -149,6 +155,8 @@ public class CompletedActivity extends AppCompatActivity implements AdapeterComp
         builder.setPositiveButton("Complete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                i = 0;
                 mDatabase.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -178,13 +186,15 @@ public class CompletedActivity extends AppCompatActivity implements AdapeterComp
                                 mDatabase2.child(uploadId).setValue(journeyInfo);
 
                                 mDatabase.child(postSnapshot.getKey()).removeValue();
-                                i = 0;
+
 
                             }
 
                             i++;
 
                         }
+
+
                     }
 
                     @Override

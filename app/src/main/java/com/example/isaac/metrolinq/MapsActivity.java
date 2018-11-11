@@ -137,7 +137,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-        mDatabase = FirebaseDatabase.getInstance().getReference("Scheduled Info");
+       // mDatabase = FirebaseDatabase.getInstance().getReference("Scheduled Info");
+        mDatabase = FirebaseDatabase.getInstance().getReference("TestRequest");
         mDatabaseFare = FirebaseDatabase.getInstance().getReference("Fare Change");
 
         mDatabaseFare.addValueEventListener(new ValueEventListener() {
@@ -318,81 +319,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             }
         });
-
-        confirmName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                                    scheduleInfo = new ScheduleInfo(finalHour,finalMin
-                            , latOrigin,lonOrigin,
-                            latDesti,lonDesti, roundedfare, enterName.getText().toString(),
-                                            finalyear,
-                                            finalmonth ,
-                                            finalday, currentDate, payment, ASSIGN_DRIVER );
-
-                String uploadId = mDatabase.push().getKey();
-                mDatabase.child(uploadId).setValue(scheduleInfo);
-                findViewById(R.id.map).setVisibility(View.VISIBLE);
-                horiLLClientName.setVisibility(View.GONE);
-
-
-            }
-        });
-
-        dateConfirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dateLL.setVisibility(View.GONE);
-                choosePayLL.setVisibility(View.VISIBLE);
-
-
-            }
-        });
-
-
-
-
-        cash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                payment = CASH;
-                choosePayLL.setVisibility(View.GONE);
-                horiLLClientName.setVisibility(View.VISIBLE);
-            }
-        });
-
-        postpaid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                payment = POSTPAID;
-                choosePayLL.setVisibility(View.GONE);
-                horiLLClientName.setVisibility(View.VISIBLE);
-            }
-        });
-
-        prepaid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                payment = PREPAID;
-                choosePayLL.setVisibility(View.GONE);
-
-                findViewById(R.id.LLprepaid).setVisibility(View.VISIBLE);
-
-
-               //
-            }
-        });
-
-        findViewById(R.id.confrimPrepaid).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                roundedfare = Integer.parseInt(prepaidAmount.getText().toString()) ;
-                findViewById(R.id.LLprepaid).setVisibility(View.GONE);
-                horiLLClientName.setVisibility(View.VISIBLE);
-            }
-        });
-
-
-
 
 
 
@@ -649,6 +575,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+
+
         finalHour = hourOfDay;
         finalMin = minute;
     }
