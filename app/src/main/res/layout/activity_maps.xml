@@ -5,6 +5,7 @@
     tools:context="com.example.isaac.metrolinq.MapsActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/metro_linq_logo"
     android:orientation="vertical"  >
 
 
@@ -41,11 +42,12 @@
 
     <Button
         android:id="@+id/selectTimeButton"
+        android:background="@color/colorAccent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:fontFamily="cursive"
-        android:text="Confirm Journey"/>
+        android:text="Confirm PickUp Time"/>
     <TimePicker
         android:id="@+id/timePicker"
         android:layout_width="match_parent"

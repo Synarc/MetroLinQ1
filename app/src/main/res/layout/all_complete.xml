@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="90"
+    android:background="@drawable/background_recyclerview"
+    android:layout_marginTop="5dp"
+    android:orientation="horizontal">
+
+
+    <TextView
+        android:text="Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="30"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:id="@+id/completedName1"/>
+
+    <TextView
+        android:text="driver"
+        android:layout_width="match_parent"
+        android:layout_weight="30"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:id="@+id/completedDriver1"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="30"
+        android:text="car"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:id="@+id/completedCar1"/>
+
+</LinearLayout>

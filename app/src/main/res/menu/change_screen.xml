@@ -11,4 +11,9 @@
         android:title="Requested Trips"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/complete"
+        android:title="Completed Trips"
+        app:showAsAction="never"/>
+
+
 </menu>
