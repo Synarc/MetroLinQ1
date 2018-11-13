@@ -276,7 +276,37 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
     }
 
     @Override
-    public void onDeleteClick(int position) {
+    public void onDeleteClick(final int position) {
+
+        iterateNumber = 0;
+        clientNameDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+
+                for(DataSnapshot postSnapshot:dataSnapshot.getChildren() ){
+
+                    if (position == iterateNumber) {
+                        clientNameDB.child(postSnapshot.getKey()).removeValue();
+                    }
+                    iterateNumber++;
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+    @Override
+    public void onAmendClick(int position) {
+
 
     }
 }

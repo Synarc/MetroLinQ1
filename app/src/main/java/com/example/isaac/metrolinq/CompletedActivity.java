@@ -210,54 +210,7 @@ public class CompletedActivity extends AppCompatActivity implements AdapeterComp
         * both cancel and complete has same effect
         *
         * */
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mDatabase.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                        for(DataSnapshot postSnapshot: dataSnapshot.getChildren()){
-
-                            if (position == i){
-
-                                JourneyInfo journeyInfo = new JourneyInfo(
-                                        postSnapshot.child("oriLat").getValue(),
-                                        postSnapshot.child("oriLon").getValue(),
-                                        postSnapshot.child("desLat").getValue(),
-                                        postSnapshot.child("desLon").getValue(),
-                                        postSnapshot.child("fare").getValue(),
-                                        postSnapshot.child("min").getValue(),
-                                        postSnapshot.child("hour").getValue(),
-                                        postSnapshot.child("day").getValue(),
-                                        postSnapshot.child("month").getValue(),
-                                        postSnapshot.child("year").getValue(),
-                                        postSnapshot.child("driver").getValue(),
-                                        postSnapshot.child("plateNumber").getValue(),
-                                        postSnapshot.child("clientName").getValue(),
-                                        postSnapshot.child("payType").getValue(),
-                                        postSnapshot.child("currentDate").getValue()
-                                );
-                                String uploadId = mDatabase2.push().getKey();
-                                mDatabase2.child(uploadId).setValue(journeyInfo);
-
-                                mDatabase.child(postSnapshot.getKey()).removeValue();
-
-                                i = 0;
-                            }
-
-                            i++;
-
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        });
         builder.setNeutralButton("Close",null);
         builder.show();
     }
@@ -315,7 +268,40 @@ public class CompletedActivity extends AppCompatActivity implements AdapeterComp
     }
 
     @Override
-    public void onDeleteClick(int position) {
+    public void onDeleteClick(final int position) {
 
+        Toast.makeText(this, "Delete Click", Toast.LENGTH_SHORT).show();
+
+        i = 0;
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot postSnapshot: dataSnapshot.getChildren()){
+
+                    if (position == i){
+
+
+                        mDatabase.child(postSnapshot.getKey()).removeValue();
+
+
+                    }
+
+                    i++;
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onAmendClick(int position) {
+
+        Toast.makeText(this, "Amend Click", Toast.LENGTH_SHORT).show();
     }
 }

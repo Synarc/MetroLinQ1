@@ -95,9 +95,11 @@ public class AdapeterComplete extends RecyclerView.Adapter<AdapeterComplete.Comp
 
             MenuItem doWhatever = menu.add(Menu.NONE,1,1,"Journey Info");
             MenuItem delete = menu.add(Menu.NONE,2,2,"Cancel");
+            MenuItem amend = menu.add(Menu.NONE,3,3,"Amend");
 
             doWhatever.setOnMenuItemClickListener(this);
             delete.setOnMenuItemClickListener(this);
+            amend.setOnMenuItemClickListener(this);
         }
 
         @Override
@@ -114,6 +116,9 @@ public class AdapeterComplete extends RecyclerView.Adapter<AdapeterComplete.Comp
                         case 2:
                             mListener.onDeleteClick(position);
                             return true;
+
+                        case 3:
+                            mListener.onAmendClick(position);
                     }
 
                 }
@@ -130,6 +135,8 @@ public class AdapeterComplete extends RecyclerView.Adapter<AdapeterComplete.Comp
         void onWhateverClick(int position);
 
         void onDeleteClick(int position);
+
+        void onAmendClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener){
