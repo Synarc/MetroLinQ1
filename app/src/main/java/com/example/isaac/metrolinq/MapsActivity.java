@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,6 +45,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -88,7 +90,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LinearLayout horiLLClientName;
     private  Button dateConfirmButton;
     private LinearLayout dateLL, choosePayLL;
-    private Button cash, prepaid, postpaid;
 
     private String m_Text;
 
@@ -129,12 +130,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         dateLL = findViewById(R.id.LLDatePicker);
 
         choosePayLL = findViewById(R.id.LLChoosePay);
-        cash = findViewById(R.id.cash);
-        prepaid = findViewById(R.id.prepaid);
-        postpaid = findViewById(R.id.postPaid);
-        prepaidAmount = findViewById(R.id.edittextPrepaid);
-       currentDate = Calendar.getInstance().getTime();
 
+        prepaidAmount = findViewById(R.id.edittextPrepaid);
+        currentDate = Calendar.getInstance().getTime();
+
+
+        String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
+
+        String[] strings = currentDateTimeString.split(":");
+        String[] strings1 = currentDateTimeString.split(" ");
+
+        int firstNumber = Integer.parseInt(strings[0]);
+        int secondNumber = Integer.parseInt(strings[1]);
+        String ampm = strings1[1];
+
+        Log.d("CURRENTDATETIME", "onCreate: "+firstNumber + secondNumber + ampm);
 
 
        // mDatabase = FirebaseDatabase.getInstance().getReference("Scheduled Info");
@@ -180,7 +190,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
                         TimePickerDialog timePickerDialog = new TimePickerDialog(MapsActivity.this, MapsActivity.this,hour, min, true);
-
                         timePickerDialog.show();
 
                         selectTimeButton.setText(DATECONFIRM);
@@ -203,8 +212,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         day = calendar.get(Calendar.DAY_OF_MONTH);
 
 
+
+
                         DatePickerDialog datePickerDialog = new DatePickerDialog(MapsActivity.this, MapsActivity.this,year,month, day);
 
+                        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                         datePickerDialog.show();
                         Toast.makeText(getApplicationContext(),timePicker.getCurrentHour()+" : "+timePicker.getCurrentMinute(),Toast.LENGTH_SHORT).show();
 
@@ -575,8 +587,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
-
 
         finalHour = hourOfDay;
         finalMin = minute;
