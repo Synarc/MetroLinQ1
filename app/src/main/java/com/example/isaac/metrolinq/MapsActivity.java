@@ -76,7 +76,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     ArrayList<Double> distancesToTotal;
     TimePicker timePicker;
     DatePicker datePicker;
-    Button selectTimeButton;
+    Button selectTimeButton, clearMap;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabaseFare;
     private ScheduleInfo scheduleInfo;
@@ -128,6 +128,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         horiLLClientName = findViewById(R.id.LLclientName);
         dateConfirmButton = findViewById(R.id.datePickerButton);
         dateLL = findViewById(R.id.LLDatePicker);
+        clearMap = findViewById(R.id.clearMap);
 
         choosePayLL = findViewById(R.id.LLChoosePay);
 
@@ -147,6 +148,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.d("CURRENTDATETIME", "onCreate: "+firstNumber + secondNumber + ampm);
 
 
+
+        clearMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listpoints.clear();
+                mMap.clear();
+            }
+        });
        // mDatabase = FirebaseDatabase.getInstance().getReference("Scheduled Info");
         mDatabase = FirebaseDatabase.getInstance().getReference("TestRequest");
         mDatabaseFare = FirebaseDatabase.getInstance().getReference("Fare Change");
