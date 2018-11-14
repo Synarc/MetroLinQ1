@@ -136,16 +136,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         currentDate = Calendar.getInstance().getTime();
 
 
-        String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
 
-        String[] strings = currentDateTimeString.split(":");
-        String[] strings1 = currentDateTimeString.split(" ");
 
-        int firstNumber = Integer.parseInt(strings[0]);
-        int secondNumber = Integer.parseInt(strings[1]);
-        String ampm = strings1[1];
-
-        Log.d("CURRENTDATETIME", "onCreate: "+firstNumber + secondNumber + ampm);
 
 
 

@@ -38,10 +38,12 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
     private AdapterQueue mAdapter;
     private RecyclerView mRecyclerView;
     private DatabaseReference mDatabase;
+    String clientName= "";
 
      int  iterate = 0;
      int iterateNumber =0;
      String driver,car;
+     String payment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -305,8 +307,212 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
     }
 
     @Override
-    public void onAmendClick(int position) {
+    public void onAmendClick(final int position) {
 
+        Toast.makeText(QueueActivity.this, "AmendClick", Toast.LENGTH_SHORT).show();
+
+        final String [] amendOption = {"Locations", "Pick up Times", "Payment Type","Name"};
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(QueueActivity.this)  ;
+        builder.setCancelable(true);
+        builder.setSingleChoiceItems(amendOption, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                Toast.makeText(QueueActivity.this, amendOption[which], Toast.LENGTH_SHORT).show();
+
+
+                switch (which){
+                    case 0:
+                        // open up map and get the cordinates of new points with new fares
+                        break;
+
+
+                    case 1:
+
+                        // open time dialog followed by day dialog
+                        break;
+
+                    case 2:
+
+                        //Open dialog with payment types
+                        final String [] payType = {"Cash", "Pre Paid", "Post Paid"};
+
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(QueueActivity.this)  ;
+                        builder.setCancelable(true);
+                        builder.setSingleChoiceItems(payType, -1, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+                                iterateNumber =0;
+                                Toast.makeText(QueueActivity.this, payType[which], Toast.LENGTH_SHORT).show();
+                                payment = payType[which];
+
+                                if (payment.equals("Pre Paid")){
+                                    AlertDialog.Builder builder1 = new AlertDialog.Builder(QueueActivity.this);
+                                    builder1.setTitle("Enter Amount");
+
+// Set up the input
+                                    final EditText input = new EditText(QueueActivity.this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                                    input.setInputType(InputType.TYPE_CLASS_NUMBER );
+                                    builder1.setView(input);
+
+// Set up the buttons
+                                    builder1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            final int roundedfare = Integer.parseInt(input.getText().toString()) ;
+
+                                            clientNameDB.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                                    for(DataSnapshot postSnapshot:dataSnapshot.getChildren() ){
+
+                                                        if (position == iterateNumber) {
+
+                                                            clientNameDB.child(postSnapshot.getKey()).child("fare"). setValue(roundedfare);
+                                                            clientNameDB.child(postSnapshot.getKey()).child("payType").setValue(payment);
+
+
+
+                                                        }
+                                                        iterateNumber++;
+                                                    }
+
+
+                                                }
+
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                                }
+                                            });
+
+
+
+
+                                        }
+                                    });
+
+
+                                    builder1.show();
+                                }
+                                else {
+                                    clientNameDB.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                            for(DataSnapshot postSnapshot:dataSnapshot.getChildren() ){
+
+                                                if (position == iterateNumber) {
+
+                                                    clientNameDB.child(postSnapshot.getKey()).child("payType").setValue(payment);
+
+                                                }
+                                                iterateNumber++;
+                                            }
+
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+                                }
+
+                                dialog.dismiss();
+                            }
+                        });
+
+                        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(QueueActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        });
+                        AlertDialog dialog1 = builder.create();
+                        dialog1.show();
+                        break;
+
+                    case 3:
+                        //open dialog that changes name
+
+
+                        AlertDialog.Builder builders = new AlertDialog.Builder(QueueActivity.this);
+                        builders.setTitle("Client Name");
+
+// Set up the input
+                        final EditText input = new EditText(QueueActivity.this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                        input.setInputType(InputType.TYPE_CLASS_TEXT );
+                        builders.setView(input);
+
+// Set up the buttons
+                        builders.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                clientName = input.getText().toString();
+                                iterateNumber = 0;
+
+                                Toast.makeText(QueueActivity.this, clientName, Toast.LENGTH_SHORT).show();
+
+                                clientNameDB.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                                        for(DataSnapshot postSnapshot:dataSnapshot.getChildren() ){
+
+                                            if (position == iterateNumber) {
+
+                                           clientNameDB.child(postSnapshot.getKey()).child("clientName"). setValue(clientName);
+
+
+
+                                            }
+                                            iterateNumber++;
+                                        }
+
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                            }
+                        });
+
+
+                        builders.show();
+
+                }
+               dialog.dismiss();
+            }
+        });
+
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(QueueActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
 
     }
 }
