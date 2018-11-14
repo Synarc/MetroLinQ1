@@ -55,6 +55,8 @@ public class AdapterQueue extends RecyclerView.Adapter <AdapterQueue.QueueViewHo
 
         queueViewHolder.clientNames.setText(DBqueue);
         queueViewHolder.time.setText(mNameDB.get(i).getTime());
+        queueViewHolder.date.setText(mNameDB.get(i).getDate());
+        queueViewHolder.paymentType.setText(mNameDB.get(i).getPaymentType());
     }
 
 
@@ -68,7 +70,7 @@ public class AdapterQueue extends RecyclerView.Adapter <AdapterQueue.QueueViewHo
 
 
         TextView clientNames;
-        TextView time;
+        TextView time, paymentType, date;
 
 
 
@@ -77,6 +79,8 @@ public class AdapterQueue extends RecyclerView.Adapter <AdapterQueue.QueueViewHo
 
             clientNames = itemView.findViewById(R.id.clientNameQueue);
             time = itemView.findViewById(R.id.timeQueue);
+            paymentType = itemView.findViewById(R.id.paytypeQueue);
+            date = itemView.findViewById(R.id.dateQueue);
 
             itemView.setOnClickListener(this);
             itemView.setOnCreateContextMenuListener(this);
