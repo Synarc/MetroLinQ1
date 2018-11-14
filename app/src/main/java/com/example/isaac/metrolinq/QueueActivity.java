@@ -1,5 +1,7 @@
 package com.example.isaac.metrolinq;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,14 +15,19 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.isaac.metrolinq.Adapters.AdapterQueue;
 import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.JourneyInfo;
 import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.QueueTimeName;
 import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.ScheduleInfo;
+import com.example.isaac.metrolinq.MapsClasses.MapAmendActivity;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -28,9 +35,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
-public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnItemClickListener{
+public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnItemClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
 
     private List<QueueTimeName> namesFD;
@@ -39,11 +47,14 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
     private RecyclerView mRecyclerView;
     private DatabaseReference mDatabase;
     String clientName= "";
+    int Pos;
 
      int  iterate = 0;
      int iterateNumber =0;
      String driver,car;
      String payment;
+    int day, month, year, hour, min;
+    int finalday, finalmonth, finalyear, finalHour, finalMin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -309,6 +320,7 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
     @Override
     public void onAmendClick(final int position) {
 
+        Pos = position;
         Toast.makeText(QueueActivity.this, "AmendClick", Toast.LENGTH_SHORT).show();
 
         final String [] amendOption = {"Locations", "Pick up Times", "Payment Type","Name"};
@@ -327,13 +339,28 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
                 switch (which){
                     case 0:
                         // open up map and get the cordinates of new points with new fares
+                        Intent intent = new Intent(QueueActivity.this, MapAmendActivity.class);
+                        startActivity(intent);
                         break;
 
 
                     case 1:
 
                         // open time dialog followed by day dialog
+
+                        Calendar c = Calendar.getInstance();
+
+                        hour = c.get(Calendar.HOUR);
+                        min = c.get(Calendar.MINUTE);
+
+
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(QueueActivity.this, QueueActivity.this,hour, min, true);
+                        timePickerDialog.show();
+
+
+
                         break;
+
 
                     case 2:
 
@@ -513,6 +540,72 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
+        finalHour = hourOfDay;
+        finalMin = minute;
+
+        Calendar calendar = Calendar.getInstance();
+
+        year =calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+
+
+
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(QueueActivity.this, QueueActivity.this,year,month, day);
+
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+        datePickerDialog.show();
+
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        finalyear = year;
+        finalmonth = month +1;
+        finalday = dayOfMonth;
+
+
+        iterateNumber = 0;
+
+        Toast.makeText(QueueActivity.this, clientName, Toast.LENGTH_SHORT).show();
+
+        clientNameDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot postSnapshot:dataSnapshot.getChildren() ){
+
+                    if (Pos == iterateNumber) {
+
+                        clientNameDB.child(postSnapshot.getKey()).child("hour"). setValue(finalHour);
+                        clientNameDB.child(postSnapshot.getKey()).child("min"). setValue(finalMin);
+                        clientNameDB.child(postSnapshot.getKey()).child("day"). setValue(finalday);
+                        clientNameDB.child(postSnapshot.getKey()).child("month"). setValue(finalmonth);
+                        clientNameDB.child(postSnapshot.getKey()).child("year"). setValue(finalyear);
+
+                        Pos = 0;
+                    }
+                    iterateNumber++;
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
+
 
     }
 }

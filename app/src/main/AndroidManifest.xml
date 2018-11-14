@@ -48,7 +48,10 @@
             android:name=".MapsPendingActivity"
             android:label="@string/title_activity_maps_pending" />
         <activity android:name=".CompleteStatusActivity" />
-        <activity android:name=".AllCompletedActivity"></activity>
+        <activity android:name=".AllCompletedActivity" />
+        <activity
+            android:name=".MapsClasses.MapAmendActivity"
+            android:label="@string/title_activity_map_amend"></activity>
     </application>
 
 </manifest>
