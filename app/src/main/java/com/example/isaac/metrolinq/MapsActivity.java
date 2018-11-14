@@ -76,7 +76,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     ArrayList<Double> distancesToTotal;
     TimePicker timePicker;
     DatePicker datePicker;
-    Button selectTimeButton, clearMap;
+    private Button selectTimeButton, clearMap;
     private DatabaseReference mDatabase;
     private DatabaseReference mDatabaseFare;
     private ScheduleInfo scheduleInfo;
@@ -85,11 +85,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     double lonOrigin;
     double latDesti;
     double lonDesti;
-    private EditText enterName, prepaidAmount;
-    private Button confirmName;
-    private LinearLayout horiLLClientName;
-    private  Button dateConfirmButton;
-    private LinearLayout dateLL, choosePayLL;
+
 
     private String m_Text;
 
@@ -123,16 +119,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         timePicker = findViewById(R.id.timePicker);
         datePicker = findViewById(R.id.datePicker);
         selectTimeButton = findViewById(R.id.selectTimeButton);
-        confirmName = findViewById(R.id.buttonClientName);
-        enterName = findViewById(R.id.editTextClientname);
-        horiLLClientName = findViewById(R.id.LLclientName);
-        dateConfirmButton = findViewById(R.id.datePickerButton);
-        dateLL = findViewById(R.id.LLDatePicker);
+
         clearMap = findViewById(R.id.clearMap);
 
-        choosePayLL = findViewById(R.id.LLChoosePay);
-
-        prepaidAmount = findViewById(R.id.edittextPrepaid);
         currentDate = Calendar.getInstance().getTime();
 
 

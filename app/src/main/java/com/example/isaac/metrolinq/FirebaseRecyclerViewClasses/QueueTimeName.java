@@ -2,8 +2,23 @@ package com.example.isaac.metrolinq.FirebaseRecyclerViewClasses;
 
 public class QueueTimeName {
 
-    private String time, name;
+    private String time, name, paymentType, date;
 
+    public String getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getTime() {
         return time;
@@ -21,8 +36,10 @@ public class QueueTimeName {
         this.name = name;
     }
 
-    public QueueTimeName(String time, String name) {
+    public QueueTimeName(String time, String name, String date, String paymentType) {
         this.time = time;
         this.name = name;
+        this.date = date;
+        this.paymentType = paymentType;
     }
 }

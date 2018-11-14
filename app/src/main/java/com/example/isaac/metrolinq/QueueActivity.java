@@ -24,10 +24,6 @@ import android.widget.Toast;
 import com.example.isaac.metrolinq.Adapters.AdapterQueue;
 import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.JourneyInfo;
 import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.QueueTimeName;
-import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.ScheduleInfo;
-import com.example.isaac.metrolinq.MapsClasses.MapAmendActivity;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -93,7 +89,12 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
                         String name = postSnapshot.child("clientName").getValue().toString();
                         String hour = postSnapshot.child("hour").getValue().toString();
                         String min = postSnapshot.child("min").getValue().toString();
-                        namesFD.add(new QueueTimeName(hour+":"+min,name));
+                        String paymentType = postSnapshot.child("payType").getValue().toString();
+                        String day1 = postSnapshot.child("day").getValue().toString();
+                        String month1 = postSnapshot.child("month").getValue().toString();
+                        String year1 = postSnapshot.child("year").getValue().toString();
+
+                        namesFD.add(new QueueTimeName(hour+":"+min,name,paymentType,day1+"/"+month1+"/"+year1));
                     }
                 }
                 mAdapter.notifyDataSetChanged();
@@ -340,6 +341,7 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
                     case 0:
                         // open up map and get the cordinates of new points with new fares
                         Intent intent = new Intent(QueueActivity.this, MapAmendActivity.class);
+                        intent.putExtra("POSITION", position);
                         startActivity(intent);
                         break;
 
