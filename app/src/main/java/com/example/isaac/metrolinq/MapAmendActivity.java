@@ -46,6 +46,9 @@ public class MapAmendActivity extends FragmentActivity implements OnMapReadyCall
     private ProgressDialog progressDialog;
     ArrayList<LatLng> listpoints;
 
+    private  int COMACT = 250;
+
+
 
     ArrayList<Double> distancesToTotal;
 
@@ -78,13 +81,23 @@ public class MapAmendActivity extends FragmentActivity implements OnMapReadyCall
         listpoints = new ArrayList<>();
         distancesToTotal = new ArrayList<>();
 
+        Intent intent = getIntent();
+        final int pos = intent.getIntExtra("POSITION", 200);
+        final int activityNumber = intent.getIntExtra("CompletedAct",200);
+
         final String [] payType = {"Cash", "Pre Paid", "Post Paid"};
-        mDatabase = FirebaseDatabase.getInstance().getReference("TestRequest");
+
+        if (COMACT == activityNumber){
+            mDatabase = FirebaseDatabase.getInstance().getReference("TestJourney");
+        }
+        else{
+            mDatabase = FirebaseDatabase.getInstance().getReference("TestRequest");
+        }
+
         clearButton = findViewById(R.id.clearMap1);
         mapOK = findViewById(R.id.mapOK);
 
-        Intent intent = getIntent();
-        final int pos = intent.getIntExtra("POSITION", 200);
+
 
         clearButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,8 +141,16 @@ public class MapAmendActivity extends FragmentActivity implements OnMapReadyCall
                     }
                 });
 
-                Intent intent = new Intent(MapAmendActivity.this, QueueActivity.class);
-                startActivity(intent);
+                if (COMACT == activityNumber){
+                    Intent intent = new Intent(MapAmendActivity.this, CompletedActivity.class);
+                    startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(MapAmendActivity.this, QueueActivity.class);
+                    startActivity(intent);
+                }
+
+
             }
         });
 

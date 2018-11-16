@@ -51,7 +51,9 @@
         <activity android:name=".AllCompletedActivity" />
         <activity
             android:name=".MapAmendActivity"
-            android:label="@string/title_activity_map_amend"></activity>
+            android:label="@string/title_activity_map_amend" />
+        <activity android:name=".ClinetNameActivity" />
+        <activity android:name=".RegisActivity"></activity>
     </application>
 
 </manifest>
