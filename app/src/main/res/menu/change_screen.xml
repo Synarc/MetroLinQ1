@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/addClient_map"
+        android:icon="@drawable/add_client"
+        app:showAsAction="always"
+        android:title="Add Client" />
 
     <item android:id="@+id/currentRun"
         android:title="Pending Trips"

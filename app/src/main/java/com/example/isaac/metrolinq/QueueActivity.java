@@ -45,12 +45,13 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
     String clientName= "";
     int Pos;
 
+
      int  iterate = 0;
      int iterateNumber =0;
      String driver,car;
      String payment;
-    int day, month, year, hour, min;
-    int finalday, finalmonth, finalyear, finalHour, finalMin;
+    private int day, month, year, hour, min;
+    private int finalday, finalmonth, finalyear, finalHour, finalMin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -359,8 +360,6 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
                         TimePickerDialog timePickerDialog = new TimePickerDialog(QueueActivity.this, QueueActivity.this,hour, min, true);
                         timePickerDialog.show();
 
-
-
                         break;
 
 
@@ -558,8 +557,6 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
         day = calendar.get(Calendar.DAY_OF_MONTH);
 
 
-
-
         DatePickerDialog datePickerDialog = new DatePickerDialog(QueueActivity.this, QueueActivity.this,year,month, day);
 
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
@@ -576,7 +573,6 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
 
         iterateNumber = 0;
 
-        Toast.makeText(QueueActivity.this, clientName, Toast.LENGTH_SHORT).show();
 
         clientNameDB.addValueEventListener(new ValueEventListener() {
             @Override
@@ -592,12 +588,12 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
                         clientNameDB.child(postSnapshot.getKey()).child("month"). setValue(finalmonth);
                         clientNameDB.child(postSnapshot.getKey()).child("year"). setValue(finalyear);
 
-                        Pos = 0;
+
                     }
                     iterateNumber++;
                 }
 
-
+                Pos = 0;
             }
 
             @Override
@@ -605,9 +601,6 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
 
             }
         });
-
-
-
 
     }
 }
