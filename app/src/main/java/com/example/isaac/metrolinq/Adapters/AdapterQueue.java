@@ -95,7 +95,7 @@ public class AdapterQueue extends RecyclerView.Adapter <AdapterQueue.QueueViewHo
                 if (position != RecyclerView.NO_POSITION){
                     switch (item.getItemId()){
                         case 1:
-                            mListener.onWhateverClick(position);
+                            mListener.onJourneyInfoClick(position);
                             return true;
 
                         case 2:
@@ -143,7 +143,7 @@ public class AdapterQueue extends RecyclerView.Adapter <AdapterQueue.QueueViewHo
     public interface OnItemClickListener{
         void onItemClick (int position);
 
-        void onWhateverClick(int position);
+        void onJourneyInfoClick(int position);
 
         void onDeleteClick(int position);
 

@@ -34,7 +34,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnItemClickListener, TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
+public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnItemClickListener,
+        TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
 
     private List<QueueTimeName> namesFD;
@@ -58,27 +59,13 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_queue);
 
-        mRecyclerView = findViewById(R.id.recyclerViewQueue);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        namesFD = new ArrayList<>();
+        initMaps();
+        requestRecView();
 
-        mAdapter = new AdapterQueue(QueueActivity.this, namesFD);
+    }
 
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(QueueActivity.this);
-//
-//        clientNameDB = FirebaseDatabase.getInstance().getReference("Scheduled Info");
-//        mDB = FirebaseDatabase.getInstance().getReference("Scheduled Info");
-//        mDatabase = FirebaseDatabase.getInstance().getReference("Journey Info");
-
-        clientNameDB = FirebaseDatabase.getInstance().getReference("TestRequest");
-        mDB = FirebaseDatabase.getInstance().getReference("TestRequest");
-        mDatabase = FirebaseDatabase.getInstance().getReference("TestJourney");
-
-
-
+    private void requestRecView() {
         clientNameDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -107,8 +94,35 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
 
             }
         });
+    }
 
-        //startActivity(mAdapter.getIntent());
+    private void initMaps() {
+
+        mRecyclerView = findViewById(R.id.recyclerViewQueue);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        namesFD = new ArrayList<>();
+
+        mAdapter = new AdapterQueue(QueueActivity.this, namesFD);
+
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(QueueActivity.this);
+
+        /*
+        * change to original list when deploying app
+        *
+        *
+        *
+        * */
+//
+//        clientNameDB = FirebaseDatabase.getInstance().getReference("Scheduled Info");
+//        mDB = FirebaseDatabase.getInstance().getReference("Scheduled Info");
+//        mDatabase = FirebaseDatabase.getInstance().getReference("Journey Info");
+
+        clientNameDB = FirebaseDatabase.getInstance().getReference("TestRequest");
+        mDB = FirebaseDatabase.getInstance().getReference("TestRequest");
+        mDatabase = FirebaseDatabase.getInstance().getReference("TestJourney");
     }
 
     @Override
@@ -148,11 +162,6 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
         Toast.makeText(this, "Normal click at position: " + position, Toast.LENGTH_SHORT).show();
 
 
-
-//        Intent intent = new Intent(QueueActivity.this, SelectDriverCarActivity.class);
-//        intent.putExtra("POSITION_NUMBER",position);
-//        startActivity(intent);
-
         AlertDialog.Builder builders = new AlertDialog.Builder(QueueActivity.this);
         builders.setTitle("Client Name");
 
@@ -176,56 +185,8 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
         builders.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                driver = driver1.getText().toString();
-                car = Car.getText().toString();
-                iterateNumber = 0;
 
-
-                clientNameDB.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                        for(DataSnapshot postSnapshot:dataSnapshot.getChildren() ){
-
-                            if (position == iterateNumber) {
-
-                                JourneyInfo journeyInfo = new JourneyInfo(
-                                        postSnapshot.child("oriLat").getValue(),
-                                        postSnapshot.child("oriLon").getValue(),
-                                        postSnapshot.child("desLat").getValue(),
-                                        postSnapshot.child("desLon").getValue(),
-                                        postSnapshot.child("fare").getValue(),
-                                        postSnapshot.child("min").getValue(),
-                                        postSnapshot.child("hour").getValue(),
-                                        postSnapshot.child("day").getValue(),
-                                        postSnapshot.child("month").getValue(),
-                                        postSnapshot.child("year").getValue(),
-                                        driver,
-                                        car,
-                                        postSnapshot.child("clientName").getValue(),
-                                        postSnapshot.child("payType").getValue(),
-                                        postSnapshot.child("currentDate").getValue()
-                                );
-
-
-                                String uploadId = mDatabase.push().getKey();
-                                mDatabase.child(uploadId).setValue(journeyInfo);
-
-                                clientNameDB.child(postSnapshot.getKey()).removeValue();
-
-
-                            }
-                            iterateNumber++;
-                        }
-
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                creatPendingDB(position,Car,driver1);
 
             }
         });
@@ -236,9 +197,62 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
 
     }
 
+    private void creatPendingDB(final int position, EditText Car, EditText driver1) {
+        driver = driver1.getText().toString();
+        car = Car.getText().toString();
+        iterateNumber = 0;
+
+
+        clientNameDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot postSnapshot:dataSnapshot.getChildren() ){
+
+                    if (position == iterateNumber) {
+
+                        JourneyInfo journeyInfo = new JourneyInfo(
+                                postSnapshot.child("oriLat").getValue(),
+                                postSnapshot.child("oriLon").getValue(),
+                                postSnapshot.child("desLat").getValue(),
+                                postSnapshot.child("desLon").getValue(),
+                                postSnapshot.child("fare").getValue(),
+                                postSnapshot.child("min").getValue(),
+                                postSnapshot.child("hour").getValue(),
+                                postSnapshot.child("day").getValue(),
+                                postSnapshot.child("month").getValue(),
+                                postSnapshot.child("year").getValue(),
+                                driver,
+                                car,
+                                postSnapshot.child("clientName").getValue(),
+                                postSnapshot.child("payType").getValue(),
+                                postSnapshot.child("currentDate").getValue()
+                        );
+
+
+                        String uploadId = mDatabase.push().getKey();
+                        mDatabase.child(uploadId).setValue(journeyInfo);
+
+                        clientNameDB.child(postSnapshot.getKey()).removeValue();
+
+
+                    }
+                    iterateNumber++;
+                }
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     @Override
-    public void onWhateverClick(final int position) {
-        Toast.makeText(this, "Whatever Click at position: " + position, Toast.LENGTH_SHORT).show();
+    public void onJourneyInfoClick(final int position) {
+        Toast.makeText(this, "Journey Info Click at position: " + position, Toast.LENGTH_SHORT).show();
 
 
 
@@ -247,9 +261,6 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
-
-
-
                         if (iterate == position) {
                             JourneyInfo journeyInfo = new JourneyInfo(
                                     postSnapshot.child("oriLat").getValue(),
@@ -268,7 +279,6 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
                                     postSnapshot.child("payType").getValue(),
                                     postSnapshot.child("currentDate").getValue()
                             );
-
 
                             Intent intent = new Intent(QueueActivity.this,MapsDriverActivity.class);
                             intent.putExtra("JI",journeyInfo);
@@ -298,7 +308,6 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-
                 for(DataSnapshot postSnapshot:dataSnapshot.getChildren() ){
 
                     if (position == iterateNumber) {
@@ -306,8 +315,6 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
                     }
                     iterateNumber++;
                 }
-
-
             }
 
             @Override
@@ -351,20 +358,11 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
 
                         // open time dialog followed by day dialog
 
-                        Calendar c = Calendar.getInstance();
-
-                        hour = c.get(Calendar.HOUR);
-                        min = c.get(Calendar.MINUTE);
-
-
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(QueueActivity.this, QueueActivity.this,hour, min, true);
-                        timePickerDialog.show();
-
+                        openTimeDate();
                         break;
 
 
                     case 2:
-
                         //Open dialog with payment types
                         final String [] payType = {"Cash", "Pre Paid", "Post Paid"};
 
@@ -381,57 +379,10 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
                                 payment = payType[which];
 
                                 if (payment.equals("Pre Paid")){
-                                    AlertDialog.Builder builder1 = new AlertDialog.Builder(QueueActivity.this);
-                                    builder1.setTitle("Enter Amount");
-
-// Set up the input
-                                    final EditText input = new EditText(QueueActivity.this);
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                                    input.setInputType(InputType.TYPE_CLASS_NUMBER );
-                                    builder1.setView(input);
-
-// Set up the buttons
-                                    builder1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            final int roundedfare = Integer.parseInt(input.getText().toString()) ;
-
-                                            clientNameDB.addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                                    for(DataSnapshot postSnapshot:dataSnapshot.getChildren() ){
-
-                                                        if (position == iterateNumber) {
-
-                                                            clientNameDB.child(postSnapshot.getKey()).child("fare"). setValue(roundedfare);
-                                                            clientNameDB.child(postSnapshot.getKey()).child("payType").setValue(payment);
-
-
-
-                                                        }
-                                                        iterateNumber++;
-                                                    }
-
-
-                                                }
-
-                                                @Override
-                                                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                }
-                                            });
-
-
-
-
-                                        }
-                                    });
-
-
-                                    builder1.show();
+                                    openEditTextAmountDialog(position);
                                 }
                                 else {
+
                                     clientNameDB.addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -441,12 +392,9 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
                                                 if (position == iterateNumber) {
 
                                                     clientNameDB.child(postSnapshot.getKey()).child("payType").setValue(payment);
-
                                                 }
                                                 iterateNumber++;
                                             }
-
-
                                         }
 
                                         @Override
@@ -454,9 +402,7 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
 
                                         }
                                     });
-
                                 }
-
                                 dialog.dismiss();
                             }
                         });
@@ -465,8 +411,6 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Toast.makeText(QueueActivity.this, "Cancel", Toast.LENGTH_SHORT).show();
-
-
                             }
                         });
                         AlertDialog dialog1 = builder.create();
@@ -542,6 +486,68 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
         AlertDialog dialog = builder.create();
         dialog.show();
 
+    }
+
+    private void openEditTextAmountDialog(final int position) {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(QueueActivity.this);
+        builder1.setTitle("Enter Amount");
+
+// Set up the input
+        final EditText input = new EditText(QueueActivity.this);
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_NUMBER );
+        builder1.setView(input);
+
+// Set up the buttons
+        builder1.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final int roundedfare = Integer.parseInt(input.getText().toString()) ;
+
+                clientNameDB.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        for(DataSnapshot postSnapshot:dataSnapshot.getChildren() ){
+
+                            if (position == iterateNumber) {
+
+                                clientNameDB.child(postSnapshot.getKey()).child("fare"). setValue(roundedfare);
+                                clientNameDB.child(postSnapshot.getKey()).child("payType").setValue(payment);
+
+
+
+                            }
+                            iterateNumber++;
+                        }
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+
+
+            }
+        });
+
+
+        builder1.show();
+    }
+
+    private void openTimeDate() {
+
+        Calendar c = Calendar.getInstance();
+
+        hour = c.get(Calendar.HOUR);
+        min = c.get(Calendar.MINUTE);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(QueueActivity.this, QueueActivity.this,hour, min, true);
+        timePickerDialog.show();
     }
 
     @Override
