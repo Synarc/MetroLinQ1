@@ -528,7 +528,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         if (distancesToTotal.size() == 3){
             roundTripDistance = distancesToTotal.get(0)+ distancesToTotal.get(1)+ distancesToTotal.get(2);
-            priceRide = roundTripDistance *y*m/1000.0;
+            priceRide = 2.0*roundTripDistance *y*m/100000.0;
+
+            Log.d("ROUNDTRIP", "onDirectionFinderSuccess: "+roundTripDistance);
 
             roundedfare = roundup(priceRide);
             ((TextView) findViewById(R.id.price)).setText("K "+Double.toString(roundedfare));
