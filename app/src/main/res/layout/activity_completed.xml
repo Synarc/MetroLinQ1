@@ -16,7 +16,8 @@
         android:gravity="center"
         android:fontFamily="sans-serif-condensed"
         android:textStyle="bold"
-        android:text="Requested Pending"/>
+        android:textColor="@color/colorMoney"
+        android:text="Pending Trips"/>
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:id="@+id/recyclerViewCompletef"

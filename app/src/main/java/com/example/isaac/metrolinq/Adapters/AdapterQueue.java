@@ -56,7 +56,7 @@ public class AdapterQueue extends RecyclerView.Adapter <AdapterQueue.QueueViewHo
         queueViewHolder.clientNames.setText(DBqueue);
         queueViewHolder.time.setText(mNameDB.get(i).getTime());
         queueViewHolder.date.setText(mNameDB.get(i).getDate());
-        queueViewHolder.paymentType.setText(mNameDB.get(i).getPaymentType());
+        queueViewHolder.paymentType.setText(mNameDB.get(i).getOriName()+"\n\n"+mNameDB.get(i).getDesName());
     }
 
 

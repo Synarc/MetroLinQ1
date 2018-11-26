@@ -34,6 +34,7 @@ public class ClinetNameActivity extends AppCompatActivity {
     AutoCompleteTextView editText;
     List<String> clientList;
     DatabaseReference clientNameDB, requestDB_name;
+    private  boolean clientExist = false;
 
     long iterateNumber;
 
@@ -95,6 +96,34 @@ public class ClinetNameActivity extends AppCompatActivity {
                 Log.d("CLIENTLIST", "onClick: "+clientList.get(3));
 
                 iterateNumber = 0;
+
+                clientNameDB.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        for(DataSnapshot postSnapshot: dataSnapshot.getChildren()){
+                            if (postSnapshot.getValue().toString().equals(editText.getText().toString())) {
+                                clientExist = true;
+                                break;
+
+                            }
+
+                        }
+
+
+                        if (!clientExist){
+                            String uploadId = clientNameDB.push().getKey();
+                            clientNameDB.child(uploadId).setValue(editText.getText().toString());
+
+                            clientExist = false;
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
 
 
                 requestDB_name.addValueEventListener(new ValueEventListener() {

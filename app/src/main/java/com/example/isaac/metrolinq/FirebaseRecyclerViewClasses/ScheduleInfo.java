@@ -14,7 +14,23 @@ public class ScheduleInfo {
     private String ClientName;
     private Date CurrentDate;
     private int Year, Month, Day;
-    private String PayType, AssignDriver;
+    private String PayType, AssignDriver, OriName, DesName;
+
+    public String getOriName() {
+        return OriName;
+    }
+
+    public void setOriName(String oriName) {
+        OriName = oriName;
+    }
+
+    public String getDesName() {
+        return DesName;
+    }
+
+    public void setDesName(String desName) {
+        DesName = desName;
+    }
 
     public String getAssignDriver() {
         return AssignDriver;
@@ -130,7 +146,7 @@ public class ScheduleInfo {
 
     public ScheduleInfo(Integer hour, Integer min, double oriLat, double oriLon, double desLat,
                         double desLon, int fare, String clientName, int year, int month, int day,
-                        Date currentDate, String payType,String assignDriver) {
+                        Date currentDate, String payType,String assignDriver, String oriName, String desName) {
         Hour = hour;
         Min = min;
         OriLat = oriLat;
@@ -145,6 +161,8 @@ public class ScheduleInfo {
         CurrentDate = currentDate;
         PayType = payType;
         AssignDriver = assignDriver;
+        OriName = oriName;
+        DesName = desName;
 
 
     }

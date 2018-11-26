@@ -15,6 +15,7 @@
         android:textSize="20dp"
         android:gravity="center"
         android:fontFamily="sans-serif-condensed"
+        android:textColor="@color/colorMoney"
         android:textStyle="bold"
         android:text="Requested Trips"/>
 

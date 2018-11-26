@@ -29,6 +29,11 @@ import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.ScheduleInfo;
 import com.example.isaac.metrolinq.MapsClasses.DirectionFinder;
 import com.example.isaac.metrolinq.MapsClasses.DirectionFinderListener;
 import com.example.isaac.metrolinq.MapsClasses.Route;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -61,6 +66,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Polyline> polylinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
     ArrayList<LatLng> listpoints;
+
+
+    private LatLng testLatlng;
+    private LatLng testLatlngDes;
+    private TextView textView;
+    private boolean isTripReady = false;
+    private boolean isOriginCalculated = false;
+
+    private String desName, oriName;
 
 
     int scase = 0;
@@ -117,8 +131,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         final String [] payType = {"Cash", "Pre Paid", "Post Paid"};
 
         Base = new LatLng(-9.447991923108408,147.1935924142599);
-        timePicker = findViewById(R.id.timePicker);
-        datePicker = findViewById(R.id.datePicker);
+
         selectTimeButton = findViewById(R.id.selectTimeButton);
 
         clearMap = findViewById(R.id.clearMap);
@@ -210,7 +223,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
                         datePickerDialog.show();
-                        Toast.makeText(getApplicationContext(),timePicker.getCurrentHour()+" : "+timePicker.getCurrentMinute(),Toast.LENGTH_SHORT).show();
 
 
 
@@ -281,11 +293,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 m_Text ="";
 
                                 scheduleInfo = new ScheduleInfo(finalHour,finalMin
-                                        , latOrigin,lonOrigin,
-                                        latDesti,lonDesti, roundedfare, m_Text,
+                                        , testLatlng.latitude,testLatlng.longitude,
+                                        testLatlngDes.latitude,testLatlngDes.longitude, roundedfare, m_Text,
                                         finalyear,
                                         finalmonth ,
-                                        finalday, currentDate, payment, ASSIGN_DRIVER );
+                                        finalday, currentDate, payment, ASSIGN_DRIVER , oriName, desName);
 
                                 String uploadId = mDatabase.push().getKey();
                                 findViewById(R.id.map).setVisibility(View.VISIBLE);
@@ -402,6 +414,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 //            return;
 //        }
 //        mMap.setMyLocationEnabled(true);
+        originSearch();
+        destinationSearch();
+
+
+
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -515,17 +532,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             polylinePaths.add(mMap.addPolyline(polylineOptions));
         }
-        if (listpoints.size() == 2){
 
-            String str_dest = listpoints.get(1).latitude + "," + listpoints.get(1).longitude;
+
+        if (isTripReady){
+
+            String str_dest = testLatlngDes.latitude + "," + testLatlngDes.longitude;
             String str_Base = Base.latitude + "," + Base.longitude;
             sendRequest(str_dest, str_Base);
             listpoints.clear();
-
-
+            isTripReady = false;
 
         }
-
         if (distancesToTotal.size() == 3){
             roundTripDistance = distancesToTotal.get(0)+ distancesToTotal.get(1)+ distancesToTotal.get(2);
             priceRide = 2.0*roundTripDistance *y*m/100000.0;
@@ -612,5 +629,100 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         finalHour = hourOfDay;
         finalMin = minute;
+    }
+
+    private void destinationSearch() {
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_destination);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+
+
+
+                testLatlngDes = place.getLatLng();
+                desName = place.getName().toString();
+
+
+                String str_origin = testLatlng.latitude+ ","+ testLatlng.longitude;
+                String str_dest = testLatlngDes.latitude + "," + testLatlngDes.longitude;
+
+                LatLng sydney = new LatLng(testLatlngDes.latitude, testLatlngDes.longitude);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12));
+                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in "+ place.getName()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+                if (testLatlngDes!= null){
+                    isTripReady = true;
+                }
+
+                sendRequest(str_origin,str_dest);
+
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+
+            }
+        });
+
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setCountry("PG")
+                .build();
+
+        autocompleteFragment.setFilter(typeFilter);
+
+    }
+
+    private void originSearch() {
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                mMap.clear();
+
+
+                testLatlng = place.getLatLng();
+                oriName = place.getName().toString();
+
+
+
+                String str_origin = testLatlng.latitude+ ","+ testLatlng.longitude;
+                String str_Base = Base.latitude + "," + Base.longitude;
+
+
+                LatLng sydney = new LatLng(testLatlng.latitude, testLatlng.longitude);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 14));
+                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in "+ place.getName()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                isOriginCalculated = true;
+
+                sendRequest(str_Base,str_origin);
+
+                selectTimeButton.setVisibility(View.VISIBLE);
+
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+
+            }
+        });
+
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setCountry("PG")
+                .build();
+
+        autocompleteFragment.setFilter(typeFilter);
+
+
     }
 }

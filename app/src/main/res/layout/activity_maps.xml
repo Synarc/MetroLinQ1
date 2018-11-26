@@ -9,6 +9,51 @@
     android:orientation="vertical"  >
 
 
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:layout_marginLeft="20dp"
+        android:text="Pick Up Location"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/background_recyclerview"
+        android:layout_height="wrap_content">
+        <fragment
+            android:id="@+id/place_autocomplete_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/colorAccent"
+        android:text="Drop Off Location"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/background_recyclerview"
+        android:layout_height="wrap_content">
+        <fragment
+            android:id="@+id/place_autocomplete_fragment_destination"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
+            />
+
+    </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +67,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:padding="5dp"
             android:src="@drawable/money"/>
 
@@ -48,129 +93,9 @@
         android:visibility="gone"
         android:fontFamily="cursive"
         android:text="Confirm PickUp Time"/>
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-    </TimePicker>
-
-    <LinearLayout
-        android:id="@+id/LLDatePicker"
-        android:layout_width="match_parent"
-        android:weightSum="100"
-        android:visibility="gone"
-        android:orientation="vertical"
-        android:layout_height="match_parent">
-
-        <DatePicker
-            android:id="@+id/datePicker"
-            android:layout_width="match_parent"
-            android:layout_weight="80"
-            android:calendarTextColor="@color/colorPrimaryDark"
-            android:headerDayOfMonthTextAppearance="@color/colorPrimaryDark"
-            android:layout_height="match_parent">
-
-        </DatePicker>
-
-        <Button
-            android:id="@+id/datePickerButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="confrim Date"
-            android:layout_weight="20"/>
 
 
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/LLclientName"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
-        android:weightSum="100"
-        android:layout_height="wrap_content">
-
-        <EditText
-            android:id="@+id/editTextClientname"
-            android:layout_width="wrap_content"
-            android:layout_weight="90"
-            android:layout_height="wrap_content"
-            android:hint="Enter Client Name"/>
-
-        <Button
-            android:id="@+id/buttonClientName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:text="Confirm name"/>
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/LLprepaid"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:weightSum="50"
-        android:visibility="gone"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/edittextPrepaid"
-            android:layout_weight="20"
-            android:hint="Amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/confrimPrepaid"
-            android:layout_weight="20"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="confrim amount"/>
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/LLChoosePay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:weightSum="90"
-        android:visibility="gone"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/cash"
-            android:layout_margin="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="30"
-            android:background="@color/colorAccent"
-            android:text="Cash"
-
-            />
-        <Button
-            android:id="@+id/prepaid"
-            android:layout_margin="5dp"
-
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="30"
-            android:background="@color/colorAccent"
-            android:text="prepaid"
-
-            />
-        <Button
-            android:id="@+id/postPaid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:layout_weight="30"
-            android:text="postpaid"
-            android:layout_margin="5dp"
-            />
-
-
-    </LinearLayout>
 
 
     <RelativeLayout

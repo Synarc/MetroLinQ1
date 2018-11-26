@@ -81,8 +81,10 @@ public class QueueActivity extends AppCompatActivity implements AdapterQueue.OnI
                         String day1 = postSnapshot.child("day").getValue().toString();
                         String month1 = postSnapshot.child("month").getValue().toString();
                         String year1 = postSnapshot.child("year").getValue().toString();
+                        String oriName = postSnapshot.child("oriName").getValue().toString();
+                        String desName = postSnapshot.child("desName").getValue().toString();
 
-                        namesFD.add(new QueueTimeName(hour+":"+min,name,paymentType,day1+"/"+month1+"/"+year1));
+                        namesFD.add(new QueueTimeName(hour+":"+min,name,paymentType,day1+"/"+month1+"/"+year1, oriName,desName));
                     }
                 }
                 mAdapter.notifyDataSetChanged();

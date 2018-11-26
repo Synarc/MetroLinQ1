@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="15sp"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorMoney"
         android:fontFamily="sans-serif-condensed"
         android:text="COMPLETED JOURNEY"/>
 
