@@ -612,7 +612,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 LatLng sydney = new LatLng(testLatlngDes.latitude, testLatlngDes.longitude);
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12));
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in "+ place.getName()));
+                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker is in "+ place.getName()));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
                 if (testLatlngDes!= null){
