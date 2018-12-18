@@ -309,46 +309,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                         Intent intent = new Intent(MapsActivity.this, ClinetNameActivity.class);
                         startActivity(intent);
-//                        AlertDialog.Builder builders = new AlertDialog.Builder(MapsActivity.this);
-//                        builders.setTitle("Client Name");
-//
-//// Set up the input
-//                        final EditText input = new EditText(MapsActivity.this);
-//// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-//
-//
-//                        input.setInputType(InputType.TYPE_CLASS_TEXT );
-//                        builders.setView(input);
-//
-//// Set up the buttons
-//                        builders.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                m_Text = input.getText().toString();
-//
-//                                selectTimeButton.setText(TIMECONFIRM);
-//
-//                                scase = 0;
-//
-//
-//                                scheduleInfo = new ScheduleInfo(finalHour,finalMin
-//                                        , latOrigin,lonOrigin,
-//                                        latDesti,lonDesti, roundedfare, m_Text,
-//                                        finalyear,
-//                                        finalmonth ,
-//                                        finalday, currentDate, payment, ASSIGN_DRIVER );
-//
-//                                String uploadId = mDatabase.push().getKey();
-//                                findViewById(R.id.map).setVisibility(View.VISIBLE);
-//                                selectTimeButton.setVisibility(View.GONE);
-//
-//                                mDatabase.child(uploadId).setValue(scheduleInfo);
-//                            }
-//                        });
-//
-//
-//                        builders.show();
-
 
                         break;
 
