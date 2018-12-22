@@ -1,30 +1,27 @@
 <LinearLayout
-
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.isaac.metrolinq.MapAmendActivity"
+    tools:context="com.example.isaac.metrolinq.MapsActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/metro_linq_logo"
     android:orientation="vertical"  >
 
 
+    <TextView
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:layout_marginLeft="20dp"
+        android:text="Pick Up Location"/>
 
     <LinearLayout
-        android:id="@+id/LLpickupAmend"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:background="@drawable/background_recyclerview"
         android:layout_height="wrap_content">
-
-        <TextView
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
-            android:layout_marginLeft="20dp"
-            android:text="Pick Up Location"/>
-
         <fragment
             android:id="@+id/place_autocomplete_fragment"
             android:layout_width="match_parent"
@@ -35,24 +32,18 @@
     </LinearLayout>
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:textColor="@color/colorAccent"
+        android:text="Drop Off Location"/>
 
     <LinearLayout
-        android:id="@+id/LLdropoffAmend"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:visibility="gone"
         android:background="@drawable/background_recyclerview"
         android:layout_height="wrap_content">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/colorAccent"
-            android:text="Drop Off Location"/>
-
-
         <fragment
             android:id="@+id/place_autocomplete_fragment_destination"
             android:layout_width="match_parent"
@@ -61,6 +52,8 @@
             />
 
     </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -74,7 +67,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
             android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:padding="5dp"
             android:src="@drawable/money"/>
 
@@ -90,9 +83,17 @@
             android:textSize="30dp"
             android:id="@+id/price"/>
 
-
-
     </LinearLayout>
+
+    <Button
+        android:id="@+id/selectTimeButton"
+        android:background="@color/colorAccent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:fontFamily="cursive"
+        android:text="Confirm PickUp Time"/>
+
 
 
 
@@ -113,7 +114,7 @@
 
 
         <Button
-            android:id="@+id/clearMap1"
+            android:id="@+id/clearMap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -122,21 +123,6 @@
             android:layout_marginBottom="5dp"
             android:background="@color/colorClear"
             android:text="clear" />
-
-
-        <Button
-            android:id="@+id/mapOK"
-            android:layout_width="64dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/colorClear"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"
-
-            android:text="OK" />
 
     </RelativeLayout>
 

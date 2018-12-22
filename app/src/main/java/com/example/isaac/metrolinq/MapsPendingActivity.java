@@ -87,7 +87,7 @@ public class MapsPendingActivity extends FragmentActivity implements OnMapReadyC
     public void onBackPressed() {
         super.onBackPressed();
 
-        Intent intent = new Intent(MapsPendingActivity.this, CompletedActivity.class);
+        Intent intent = new Intent(MapsPendingActivity.this, MainActivity.class);
         startActivity(intent);
     }
 }

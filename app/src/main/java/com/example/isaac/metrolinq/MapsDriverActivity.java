@@ -83,7 +83,7 @@ public class MapsDriverActivity extends FragmentActivity implements OnMapReadyCa
     public void onBackPressed() {
         super.onBackPressed();
 
-        Intent intent = new Intent(MapsDriverActivity.this, QueueActivity.class);
+        Intent intent = new Intent(MapsDriverActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
     }

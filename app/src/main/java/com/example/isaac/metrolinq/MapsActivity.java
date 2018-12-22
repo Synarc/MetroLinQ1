@@ -621,6 +621,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 sendRequest(str_origin,str_dest);
 
+                findViewById(R.id.LLpickup).setVisibility(View.VISIBLE);
+                findViewById(R.id.LLdropoff).setVisibility(View.GONE);
+                selectTimeButton.setVisibility(View.VISIBLE);
+
             }
 
             @Override
@@ -666,7 +670,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 sendRequest(str_Base,str_origin);
 
-                selectTimeButton.setVisibility(View.VISIBLE);
+
+                findViewById(R.id.LLpickup).setVisibility(View.GONE);
+                findViewById(R.id.LLdropoff).setVisibility(View.VISIBLE);
+
 
             }
 
@@ -684,5 +691,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         autocompleteFragment.setFilter(typeFilter);
 
 
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent(MapsActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 }

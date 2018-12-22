@@ -9,19 +9,23 @@
     android:orientation="vertical"  >
 
 
-    <TextView
 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorAccent"
-        android:layout_marginLeft="20dp"
-        android:text="Pick Up Location"/>
 
     <LinearLayout
+        android:id="@+id/LLpickup"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:background="@drawable/background_recyclerview"
         android:layout_height="wrap_content">
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:layout_marginLeft="20dp"
+            android:text="Pick Up Location"/>
+
         <fragment
             android:id="@+id/place_autocomplete_fragment"
             android:layout_width="match_parent"
@@ -32,18 +36,24 @@
     </LinearLayout>
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:textColor="@color/colorAccent"
-        android:text="Drop Off Location"/>
 
     <LinearLayout
+        android:id="@+id/LLdropoff"
         android:layout_width="match_parent"
         android:orientation="vertical"
+        android:visibility="gone"
         android:background="@drawable/background_recyclerview"
         android:layout_height="wrap_content">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/colorAccent"
+            android:text="Drop Off Location"/>
+
+
         <fragment
             android:id="@+id/place_autocomplete_fragment_destination"
             android:layout_width="match_parent"

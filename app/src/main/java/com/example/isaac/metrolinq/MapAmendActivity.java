@@ -15,6 +15,11 @@ import android.widget.Toast;
 import com.example.isaac.metrolinq.MapsClasses.DirectionFinder;
 import com.example.isaac.metrolinq.MapsClasses.DirectionFinderListener;
 import com.example.isaac.metrolinq.MapsClasses.Route;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.AutocompleteFilter;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,6 +50,14 @@ public class MapAmendActivity extends FragmentActivity implements OnMapReadyCall
     private List<Polyline> polylinePaths = new ArrayList<>();
     private ProgressDialog progressDialog;
     ArrayList<LatLng> listpoints;
+
+    private LatLng testLatlng;
+    private LatLng testLatlngDes;
+    private String desName, oriName;
+
+    private boolean isTripReady = false;
+    private boolean isOriginCalculated = false;
+
 
     private  int COMACT = 250;
 
@@ -123,10 +136,14 @@ public class MapAmendActivity extends FragmentActivity implements OnMapReadyCall
 
                             if (pos == iteration){
                                 mDatabase.child(postSnapshop.getKey()).child("fare").setValue(roundedfare);
-                                mDatabase.child(postSnapshop.getKey()).child("desLat").setValue(latDesti);
-                                mDatabase.child(postSnapshop.getKey()).child("desLon").setValue(lonDesti);
-                                mDatabase.child(postSnapshop.getKey()).child("oriLat").setValue(latOrigin);
-                                mDatabase.child(postSnapshop.getKey()).child("oriLon").setValue(lonOrigin);
+                                mDatabase.child(postSnapshop.getKey()).child("desLat").setValue(testLatlngDes.latitude);
+                                mDatabase.child(postSnapshop.getKey()).child("desLon").setValue(testLatlngDes.longitude);
+                                mDatabase.child(postSnapshop.getKey()).child("oriLat").setValue(testLatlng.latitude);
+                                mDatabase.child(postSnapshop.getKey()).child("oriLon").setValue(testLatlng.longitude);
+                                mDatabase.child(postSnapshop.getKey()).child("oriName").setValue(oriName);
+                                mDatabase.child(postSnapshop.getKey()).child("desName").setValue(desName);
+
+
 
                             }
 
@@ -142,11 +159,11 @@ public class MapAmendActivity extends FragmentActivity implements OnMapReadyCall
                 });
 
                 if (COMACT == activityNumber){
-                    Intent intent = new Intent(MapAmendActivity.this, CompletedActivity.class);
+                    Intent intent = new Intent(MapAmendActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
                 else{
-                    Intent intent = new Intent(MapAmendActivity.this, QueueActivity.class);
+                    Intent intent = new Intent(MapAmendActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
 
@@ -240,6 +257,9 @@ public class MapAmendActivity extends FragmentActivity implements OnMapReadyCall
 //            return;
 //        }
 //        mMap.setMyLocationEnabled(true);
+
+        originSearch();
+        destinationSearch();
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -284,11 +304,13 @@ public class MapAmendActivity extends FragmentActivity implements OnMapReadyCall
                     String str_dest = listpoints.get(1).latitude + "," + listpoints.get(1).longitude;
 
                     sendRequest(str_origin,str_dest);
-                    // sendRequest(str_dest, str_Base);
+
+
 
                 }
             }
         });
+
 
 
     }
@@ -353,23 +375,20 @@ public class MapAmendActivity extends FragmentActivity implements OnMapReadyCall
 
             polylinePaths.add(mMap.addPolyline(polylineOptions));
         }
-        if (listpoints.size() == 2){
+        if (isTripReady){
 
-            String str_dest = listpoints.get(1).latitude + "," + listpoints.get(1).longitude;
+            String str_dest = testLatlngDes.latitude + "," + testLatlngDes.longitude;
             String str_Base = Base.latitude + "," + Base.longitude;
             sendRequest(str_dest, str_Base);
             listpoints.clear();
-
-
+            isTripReady = false;
 
         }
-
         if (distancesToTotal.size() == 3){
             roundTripDistance = distancesToTotal.get(0)+ distancesToTotal.get(1)+ distancesToTotal.get(2);
+            priceRide = 2.0*roundTripDistance *y*m/100000.0;
 
-
-
-            priceRide = roundTripDistance *y*m/1000.0;
+            Log.d("ROUNDTRIP", "onDirectionFinderSuccess: "+roundTripDistance);
 
             roundedfare = roundup(priceRide);
             ((TextView) findViewById(R.id.price)).setText("K "+Double.toString(roundedfare));
@@ -401,5 +420,109 @@ public class MapAmendActivity extends FragmentActivity implements OnMapReadyCall
 
         return rounded;
     }
+
+    private void destinationSearch() {
+
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment_destination);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+
+
+
+                testLatlngDes = place.getLatLng();
+                desName = place.getName().toString();
+
+
+                String str_origin = testLatlng.latitude+ ","+ testLatlng.longitude;
+                String str_dest = testLatlngDes.latitude + "," + testLatlngDes.longitude;
+
+                LatLng sydney = new LatLng(testLatlngDes.latitude, testLatlngDes.longitude);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 12));
+                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker is in "+ place.getName()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+                if (testLatlngDes!= null){
+                    isTripReady = true;
+                }
+
+                sendRequest(str_origin,str_dest);
+
+                findViewById(R.id.LLpickupAmend).setVisibility(View.VISIBLE);
+                findViewById(R.id.LLdropoffAmend).setVisibility(View.GONE);
+
+
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+
+            }
+        });
+
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setCountry("PG")
+                .build();
+
+        autocompleteFragment.setFilter(typeFilter);
+
+    }
+
+    private void originSearch() {
+        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
+                getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                mMap.clear();
+
+
+                testLatlng = place.getLatLng();
+                oriName = place.getName().toString();
+
+
+
+                String str_origin = testLatlng.latitude+ ","+ testLatlng.longitude;
+                String str_Base = Base.latitude + "," + Base.longitude;
+
+
+                LatLng sydney = new LatLng(testLatlng.latitude, testLatlng.longitude);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 14));
+                mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in "+ place.getName()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                isOriginCalculated = true;
+
+                sendRequest(str_Base,str_origin);
+
+
+                findViewById(R.id.LLpickupAmend).setVisibility(View.GONE);
+                findViewById(R.id.LLdropoffAmend).setVisibility(View.VISIBLE);
+
+
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+
+            }
+        });
+
+        AutocompleteFilter typeFilter = new AutocompleteFilter.Builder()
+                .setCountry("PG")
+                .build();
+
+        autocompleteFragment.setFilter(typeFilter);
+
+
+
+    }
+
 
 }
