@@ -334,7 +334,6 @@ public class FragmentPending  extends Fragment implements AdapeterComplete.OnIte
 
                     case 1:
 
-                        // open time dialog followed by day dialog
 
                         Calendar c = Calendar.getInstance();
 
