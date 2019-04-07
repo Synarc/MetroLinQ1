@@ -24,11 +24,8 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.isaac.metrolinq.Adapters.AdapeterComplete;
-import com.example.isaac.metrolinq.Adapters.AdapterQueue;
-import com.example.isaac.metrolinq.CompletedActivity;
 import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.DriverCar;
 import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.JourneyInfo;
-import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.QueueTimeName;
 import com.example.isaac.metrolinq.MapAmendActivity;
 import com.example.isaac.metrolinq.MapsPendingActivity;
 import com.example.isaac.metrolinq.R;
@@ -182,7 +179,9 @@ public class FragmentPending  extends Fragment implements AdapeterComplete.OnIte
                                         postSnapshot.child("plateNumber").getValue(),
                                         postSnapshot.child("clientName").getValue(),
                                         postSnapshot.child("payType").getValue(),
-                                        postSnapshot.child("currentDate").getValue()
+                                        postSnapshot.child("currentDate").getValue(),
+                                        postSnapshot.child("originName").getValue(),
+                                        postSnapshot.child("destinationName").getValue()
                                 );
                                 String uploadId = mDatabase2.push().getKey();
                                 mDatabase2.child(uploadId).setValue(journeyInfo);
@@ -244,7 +243,9 @@ public class FragmentPending  extends Fragment implements AdapeterComplete.OnIte
                                 postSnapshot.child("plateNumber").getValue(),
                                 postSnapshot.child("clientName").getValue(),
                                 postSnapshot.child("payType").getValue(),
-                                postSnapshot.child("currentDate").getValue()
+                                postSnapshot.child("currentDate").getValue(),
+                                postSnapshot.child("oriName").getValue(),
+                                postSnapshot.child("desName").getValue()
                         );
 
 

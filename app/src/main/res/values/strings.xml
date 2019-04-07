@@ -4,4 +4,8 @@
     <string name="title_activity_maps_driver">Map</string>
     <string name="title_activity_maps_pending">Map</string>
     <string name="title_activity_map_amend">Map</string>
+    <string name="title_activity_map_car_track">Map</string>
+    <string name="Req">Requested</string>
+    <string name="Pending">Pending</string>
+    <string name="complete">Complete</string>
 </resources>

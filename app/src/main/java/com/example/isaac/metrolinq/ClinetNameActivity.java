@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.JourneyInfo;
 import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.QueueTimeName;
@@ -24,15 +25,12 @@ import java.util.List;
 public class ClinetNameActivity extends AppCompatActivity {
 
 
-    private static final String[] COUNTRIES = new String[]{
-            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola",
-            "Buka", "Manus", "Kerema", "Alotau", "Jamaica", "Alabana", "Alwyn", "Alex" +
-            ""
-    };
+
 
    private  Button nameOk;
     AutoCompleteTextView editText;
     List<String> clientList;
+    List<ClientInfo> clientList_ID;
     DatabaseReference clientNameDB, requestDB_name;
     private  boolean clientExist = false;
 
@@ -55,6 +53,7 @@ public class ClinetNameActivity extends AppCompatActivity {
          requestDB_name = FirebaseDatabase.getInstance().getReference("TestRequest");
 
          clientList = new ArrayList<>();
+        clientList_ID = new ArrayList<ClientInfo>();
 
 
 
@@ -67,10 +66,17 @@ public class ClinetNameActivity extends AppCompatActivity {
 
                  for (DataSnapshot postSnapshot : dataSnapshot.getChildren()){
 
-                         String name = postSnapshot.getValue().toString();
+                     if (postSnapshot!= null) {
+                         String name = postSnapshot.child("firstName").getValue().toString();
+                         String nameLast = postSnapshot.child("lastName").getValue().toString();
+                         Long clientIdFB = (Long) postSnapshot.child("clientId").getValue();
+
+                         int clientId =  clientIdFB.intValue();
 
 
-                         clientList.add(name);
+                         clientList_ID.add(new ClientInfo(name, nameLast, clientId));
+                         clientList.add(name+" "+ nameLast+ ":" + clientId );
+                     }
 
                  }
 
@@ -91,9 +97,10 @@ public class ClinetNameActivity extends AppCompatActivity {
         nameOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("DROPDOWN", "onClick: "+ editText.getText().toString());
 
-                Log.d("CLIENTLIST", "onClick: "+clientList.get(3));
+                final int lastNum;
+
+                lastNum = clientList_ID.get(clientList_ID.size()-1).clientId;
 
                 iterateNumber = 0;
 
@@ -104,6 +111,7 @@ public class ClinetNameActivity extends AppCompatActivity {
                         for(DataSnapshot postSnapshot: dataSnapshot.getChildren()){
                             if (postSnapshot.getValue().toString().equals(editText.getText().toString())) {
                                 clientExist = true;
+                                Log.d("LASTNUMBER", "onDataChange: "+ lastNum);
                                 break;
 
                             }
@@ -112,10 +120,13 @@ public class ClinetNameActivity extends AppCompatActivity {
 
 
                         if (!clientExist){
-                            String uploadId = clientNameDB.push().getKey();
-                            clientNameDB.child(uploadId).setValue(editText.getText().toString());
 
-                            clientExist = false;
+                            //TODO look for a way to add new clients name is name not on list
+//                            String uploadId = clientNameDB.push().getKey();
+//                            clientNameDB.child(uploadId).setValue(editText.getText().toString());
+//
+//                            clientExist = false;
+
                         }
                     }
 

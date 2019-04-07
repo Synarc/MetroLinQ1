@@ -104,6 +104,11 @@ public class AdapterQueue extends RecyclerView.Adapter <AdapterQueue.QueueViewHo
 
                         case 3:
                             mListener.onAmendClick(position);
+                            return true;
+                        case 4:
+                            mListener.onAcknowledgeClick(position);
+
+
                     }
 
                 }
@@ -131,11 +136,14 @@ public class AdapterQueue extends RecyclerView.Adapter <AdapterQueue.QueueViewHo
             MenuItem doWhatever = menu.add(Menu.NONE,1,1,"Journey Info");
             MenuItem delete = menu.add(Menu.NONE,2,2,"Cancel");
             MenuItem amend = menu.add(Menu.NONE,3,3,"Amend");
+            MenuItem acknowledge = menu.add(Menu.NONE,4,4,"Acknowledge");
+
 
 
             doWhatever.setOnMenuItemClickListener(this);
             delete.setOnMenuItemClickListener(this);
             amend.setOnMenuItemClickListener(this);
+            acknowledge.setOnMenuItemClickListener(this);
         }
     }
 
@@ -148,6 +156,8 @@ public class AdapterQueue extends RecyclerView.Adapter <AdapterQueue.QueueViewHo
         void onDeleteClick(int position);
 
         void onAmendClick(int position);
+
+        void onAcknowledgeClick(int position);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener){

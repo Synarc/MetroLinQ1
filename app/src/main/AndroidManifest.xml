@@ -8,6 +8,8 @@
          location permissions for the 'MyLocation' functionality. 
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.SEND_SMS"/>
 
     <application
         android:allowBackup="true"
@@ -31,20 +33,13 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
-
-        </activity>
-        <activity android:name=".QueueActivity" />
-        <activity android:name=".SelectDriverCarActivity" />
-        <activity android:name=".CompletedActivity" />
+            android:label="@string/title_activity_maps"></activity>
         <activity
             android:name=".MapsDriverActivity"
             android:label="@string/title_activity_maps_driver" />
         <activity
             android:name=".MapsPendingActivity"
             android:label="@string/title_activity_maps_pending" />
-        <activity android:name=".CompleteStatusActivity" />
-        <activity android:name=".AllCompletedActivity" />
         <activity
             android:name=".MapAmendActivity"
             android:label="@string/title_activity_map_amend" />
@@ -57,6 +52,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MapsClasses.MapCarTrackActivity"
+            android:label="@string/title_activity_map_car_track"></activity>
     </application>
 
 </manifest>

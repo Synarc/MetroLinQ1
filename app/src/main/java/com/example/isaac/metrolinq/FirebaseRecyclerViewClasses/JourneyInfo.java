@@ -15,6 +15,23 @@ public class JourneyInfo implements Serializable {
     private Long year;
     private String driver;
     private String clientName, payType;
+    private String originName, destinationName;
+
+    public String getOriginName() {
+        return originName;
+    }
+
+    public void setOriginName(String originName) {
+        this.originName = originName;
+    }
+
+    public String getDestinationName() {
+        return destinationName;
+    }
+
+    public void setDestinationName(String destinationName) {
+        this.destinationName = destinationName;
+    }
 
     public Object getCurrentTime() {
         return currentTime;
@@ -135,7 +152,7 @@ public class JourneyInfo implements Serializable {
     public JourneyInfo(Object oriLat, Object oriLon, Object desLat,
                        Object delLon, Object fare, Object min, Object hour,
                        Object day, Object month, Object year, Object driver, Object plateNumber, Object clientName,
-                       Object payType, Object currentTime) {
+                       Object payType, Object currentTime, Object originName, Object destinationName) {
 
         if (driver == null){
             driver = "";
@@ -159,5 +176,7 @@ public class JourneyInfo implements Serializable {
         this.clientName = (String) clientName;
         this.payType = (String)payType;
         this.currentTime = currentTime;
+        this.originName = (String) originName;
+        this.destinationName = (String) destinationName;
     }
 }

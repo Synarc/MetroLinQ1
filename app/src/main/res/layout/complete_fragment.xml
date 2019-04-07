@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="25sp"
-        android:textColor="@color/colorMoney"
         android:fontFamily="sans-serif-condensed"
         android:text="Completed Journey"/>
 

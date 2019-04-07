@@ -1,13 +1,16 @@
 package com.example.isaac.metrolinq;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -59,7 +62,7 @@ import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, DirectionFinderListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-    private static final int LOCATION_REQUEST = 500 ;
+    private static final int LOCATION_REQUEST = 1 ;
     private GoogleMap mMap;
     private List<Marker> originMarkers = new ArrayList<>();
     private List<Marker> destinationMarkers = new ArrayList<>();
@@ -93,7 +96,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     DatePicker datePicker;
     private Button selectTimeButton, clearMap;
     private DatabaseReference mDatabase;
-    private DatabaseReference mDatabaseFare;
+    private DatabaseReference mDatabaseFare, mDatabaseCarLoc;
     private ScheduleInfo scheduleInfo;
     private LatLng Base;
     double latOrigin;
@@ -137,6 +140,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         clearMap = findViewById(R.id.clearMap);
 
         currentDate = Calendar.getInstance().getTime();
+        mDatabaseCarLoc = FirebaseDatabase.getInstance().getReference("Car Location");
+
 
 
 
@@ -351,29 +356,49 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-9.4438, 147.1803);
 
+        LatLng car = new LatLng(-9.4438, 147.1803);
+
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
 
 
 
+        mDatabaseCarLoc.child("LATLONG").child("Bus 123").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                mMap.clear();
+                LatLng car = new LatLng((Double) dataSnapshot.child("latitude").getValue(),(Double) dataSnapshot.child("longitude").getValue());
+
+                mMap.addMarker(new MarkerOptions().position(car).title("CAR"));
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         /*
         * this statement is stoping the hybrid from showing in some phones
         *
         * */
 
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            // TODO: Consider calling
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//           // ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST);
-//            return;
-//        }
-//        mMap.setMyLocationEnabled(true);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},LOCATION_REQUEST);
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
         originSearch();
         destinationSearch();
 
@@ -552,18 +577,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         switch (item.getItemId()){
             case R.id.queue:
-                Intent intent = new Intent(this, QueueActivity.class);
-                startActivity(intent);
+
                 break;
 
             case R.id.complete:
-                Intent intent1= new Intent(this, AllCompletedActivity.class);
-                startActivity(intent1);
+
                 break;
 
             case R.id.currentRun:
-                Intent intent2 = new Intent(this, CompletedActivity.class);
-                startActivity(intent2);
+
                 break;
 
             case R.id.addClient_map:

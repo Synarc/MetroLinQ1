@@ -1,18 +1,24 @@
 package com.example.isaac.metrolinq.Fragments;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.SmsManager;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +33,6 @@ import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.JourneyInfo;
 import com.example.isaac.metrolinq.FirebaseRecyclerViewClasses.QueueTimeName;
 import com.example.isaac.metrolinq.MapAmendActivity;
 import com.example.isaac.metrolinq.MapsDriverActivity;
-import com.example.isaac.metrolinq.QueueActivity;
 import com.example.isaac.metrolinq.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -47,6 +52,8 @@ public class FragmentRequested extends Fragment implements  AdapterQueue.OnItemC
     private List<QueueTimeName> listRequested;
     private DatabaseReference clientNameDB;
     private AdapterQueue adapter;
+    private static final int SEND_PERMISSION_REQUEST_CODE = 32154;
+
 
     private String driver, car;
     private int iterateNumber;
@@ -88,6 +95,13 @@ public class FragmentRequested extends Fragment implements  AdapterQueue.OnItemC
         super.onCreate(savedInstanceState);
 
 
+
+        if (checkPermission(Manifest.permission.SEND_SMS)){
+            Toast.makeText(getContext(), "Can Send SMS", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            ActivityCompat.requestPermissions(getActivity(), new String [] {Manifest.permission.SEND_SMS}, SEND_PERMISSION_REQUEST_CODE);
+        }
         listRequested = new ArrayList<>();
 
         clientNameDB = FirebaseDatabase.getInstance().getReference("TestRequest");
@@ -117,9 +131,10 @@ public class FragmentRequested extends Fragment implements  AdapterQueue.OnItemC
                         String day1 = postSnapshot.child("day").getValue().toString();
                         String month1 = postSnapshot.child("month").getValue().toString();
                         String year1 = postSnapshot.child("year").getValue().toString();
+                        String fare = postSnapshot.child("fare").getValue().toString();
 
 
-                        listRequested.add(new QueueTimeName(hour+":"+min,name,paymentType,
+                        listRequested.add(new QueueTimeName(hour+":"+min,name,paymentType + ": K"+fare,
                                 day1+"/"+month1+"/"+year1,
                                 postSnapshot.child("oriName").getValue().toString(),postSnapshot.child("desName").getValue().toString()));
                     }
@@ -140,6 +155,9 @@ public class FragmentRequested extends Fragment implements  AdapterQueue.OnItemC
 
 
         Toast.makeText(getContext(), "Normal click at position: " + position, Toast.LENGTH_SHORT).show();
+
+
+
 
 
         AlertDialog.Builder builders = new AlertDialog.Builder(getContext());
@@ -176,6 +194,8 @@ public class FragmentRequested extends Fragment implements  AdapterQueue.OnItemC
 
     }
 
+
+    // 11200
     private void creatPendingDB(final int position, EditText Car, EditText driver1) {
         driver = driver1.getText().toString();
         car = Car.getText().toString();
@@ -205,19 +225,21 @@ public class FragmentRequested extends Fragment implements  AdapterQueue.OnItemC
                                 car,
                                 postSnapshot.child("clientName").getValue(),
                                 postSnapshot.child("payType").getValue(),
-                                postSnapshot.child("currentDate").getValue()
+                                postSnapshot.child("currentDate").getValue(),
+                                postSnapshot.child("oriName").getValue(),
+                                postSnapshot.child("desName").getValue()
                         );
 
 
                         String uploadId = mDatabase.push().getKey();
                         mDatabase.child(uploadId).setValue(journeyInfo);
-
                         clientNameDB.child(postSnapshot.getKey()).removeValue();
-
-
+                        //break;
                     }
                     iterateNumber++;
                 }
+
+               // iterateNumber = 0;
 
 
             }
@@ -258,7 +280,9 @@ public class FragmentRequested extends Fragment implements  AdapterQueue.OnItemC
                                 null,
                                 postSnapshot.child("clientName").getValue(),
                                 postSnapshot.child("payType").getValue(),
-                                postSnapshot.child("currentDate").getValue()
+                                postSnapshot.child("currentDate").getValue(),
+                                postSnapshot.child("oriName").getValue(),
+                                postSnapshot.child("desName").getValue()
                         );
 
                         Intent intent = new Intent(getContext(),MapsDriverActivity.class);
@@ -466,6 +490,47 @@ public class FragmentRequested extends Fragment implements  AdapterQueue.OnItemC
         dialog.show();
     }
 
+    @Override
+    public void onAcknowledgeClick(final int position) {
+
+
+        Toast.makeText(getContext(), "Acknowledge", Toast.LENGTH_SHORT).show();
+        iterateNumber = 0;
+        mDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot postSnapshot:dataSnapshot.getChildren() ){
+
+                    if (position == iterateNumber) {
+
+                        Toast.makeText(getContext(), postSnapshot.child("phoneNumber").getValue().toString(), Toast.LENGTH_SHORT).show();
+
+                        String phone = postSnapshot.child("phoneNumber").getValue().toString();
+                        Log.d("phoneNumber", "onDataChange: " + postSnapshot.child("phoneNumber").getValue().toString());
+
+
+                        String words = "YOUR BOOKING HAS BEEN CONFIRMED. WE WILL NOTIFY YOU WHEN THE CAR IS AT YOUR LOCATION";// checkBox1a.getText().toString()+"  vs  "+checkBox1b.getText().toString();
+
+                        SmsManager smsManager = SmsManager.getDefault();
+
+                        smsManager.sendTextMessage(phone, null, words, null,null);
+
+
+
+                    }
+                    iterateNumber++;
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void openEditTextAmountDialog(final int position) {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
         builder1.setTitle("Enter Amount");
@@ -586,6 +651,26 @@ public class FragmentRequested extends Fragment implements  AdapterQueue.OnItemC
             }
         });
 
+    }
+    private boolean checkPermission(String permission) {
+
+        int checkPermission = ContextCompat.checkSelfPermission(getContext(), permission);
+
+        return  checkPermission == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode){
+
+            case SEND_PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && (grantResults[0] == PackageManager.PERMISSION_GRANTED)){
+                   // button.setEnabled(true);
+                    Toast.makeText(getContext(), "Can Send SMS", Toast.LENGTH_SHORT).show();
+
+                }
+
+        }
     }
 
 }
